@@ -1,1 +1,6 @@
-toolchain/
+toolchain/gcc
+toolchain/binutils
+toolchain/build
+
+src/*.o
+src/*.d
