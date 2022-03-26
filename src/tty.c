@@ -6,18 +6,19 @@
 
 static const size_t vgaWidth = 80;
 static const size_t vgaHeight = 25;
+static uint16_t* const vgaMemory = (uint16_t*) 0xB8000;
 
-size_t currentRow;
-size_t currentColumn;
-uint8_t terminalColor;
-uint16_t *terminalBuffer;
+static size_t currentRow;
+static size_t currentColumn;
+static uint8_t terminalColor;
+static uint16_t *terminalBuffer;
 
 void initTerminal(void)
 {
     currentRow = 0;
     currentColumn = 0;
     terminalColor = vgaEntryColor(vgaColorLightBlue, vgaColorBlack);
-    terminalBuffer = (uint16_t *)0xB8000;
+    terminalBuffer = vgaMemory;
     for (size_t y = 0; y < vgaHeight; y++)
     {
         for (size_t x = 0; x < vgaWidth; x++)
@@ -39,15 +40,53 @@ void terminalEntryAt(char c, uint8_t color, size_t x, size_t y)
     terminalBuffer[index] = vgaEntry(c, color);
 }
 
+void scrollTerminal(int line) {
+	int *loop;
+	char c;
+ 
+	for(loop = line * (vgaWidth * 2) + 0xB8000; loop < vgaWidth * 2; loop++) {
+		c = *loop;
+		*(loop - (vgaWidth * 2)) = c;
+	}
+}
+ 
+void deleteLastTerminalLine() {
+	int x, *ptr;
+ 
+	for(x = 0; x < vgaWidth * 2; x++) {
+		ptr = 0xB8000 + (vgaWidth * 2) * (vgaHeight - 1) + x;
+		*ptr = 0;
+	}
+}
+
 void terminalPutChar(char c)
 {
-    terminalEntryAt(c, terminalColor, currentColumn, currentRow);
-    if (++currentColumn == vgaWidth)
+    int line;
+    unsigned char uc = c;
+
+    if (uc == '\n')
     {
+        currentRow++;
         currentColumn = 0;
-        if (++currentRow == vgaHeight)
-            currentRow = 0;
     }
+    else
+    {
+
+        terminalEntryAt(uc, terminalColor, currentColumn, currentRow);
+
+    } 
+    if (++currentColumn == vgaWidth)
+        {
+            currentColumn = 0;
+            if (++currentRow == vgaHeight) {
+                for(line = 1; line <= vgaHeight - 1; line++)
+			    {
+				    scrollTerminal(line);
+			    }
+			    deleteLastTerminalLine();
+			    currentRow = vgaHeight - 1;
+            }
+        }
 }
 
 void writeTerminal(const char *data, size_t size)
@@ -60,4 +99,3 @@ void printF(const char *data)
 {
     writeTerminal(data, strlen(data));
 }
-
