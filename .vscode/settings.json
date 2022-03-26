@@ -1,4 +1,12 @@
 {
   "C_Cpp.errorSquiggles": "Disabled",
-  "cSpell.words": ["userspace"]
+  "cSpell.words": [
+    "userspace"
+  ],
+  "files.associations": {
+    "regex": "cpp",
+    "sstream": "cpp",
+    "strstream": "cpp",
+    "string.h": "c"
+  }
 }
