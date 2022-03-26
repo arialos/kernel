@@ -2,5 +2,6 @@ toolchain/gcc
 toolchain/binutils
 toolchain/build
 
-src/*.o
-src/*.d
+src/**/*.o
+src/**/*.d
+arial.bin
