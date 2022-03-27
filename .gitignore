@@ -6,4 +6,4 @@ toolchain/build
 
 src/**/*.o
 src/**/*.d
-arial.bin
+arial.*
