@@ -7,3 +7,5 @@ toolchain/build
 src/**/*.o
 src/**/*.d
 arial.*
+
+build

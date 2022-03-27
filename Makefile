@@ -2,7 +2,7 @@ TARGET=i686-elf
 PROJDIRS = src
 DESTDIR = build
 
-CC = $(HOME)/opt/cross/bin/$(TARGET)
+CC = $(HOME)/opt/bin/$(TARGET)
 
 CFILES := $(shell find $(PROJDIRS) -type f -name "*.c")
 ASMFILES := $(shell find $(PROJDIRS) -type f -name "*.s")
@@ -23,9 +23,9 @@ LDFLAGS := -ffreestanding -O2 -nostdlib -lgcc
 .PHONY: all clean run iso
 .SUFFIXES: .o .c .s
 
-all: arial.kernel
+all: arial.elf
 
-arial.kernel: $(OBJFILES) src/linker.ld
+arial.elf: $(OBJFILES) src/linker.ld
 	$(CC)-gcc -T src/linker.ld -o $@ $(LDFLAGS) $(OBJFILES)
 
 .c.o:
@@ -34,20 +34,11 @@ arial.kernel: $(OBJFILES) src/linker.ld
 .s.o:
 	$(CC)-as -MD -c $< -o $@
 
-iso: arial.kernel
-	grub-file --is-x86-multiboot arial.kernel
-	mkdir -p build
-	mkdir -p build/boot
-	cp arial.kernel build/boot/arial.kernel
-	mkdir -p build/boot/grub
-	cp grub.cfg build/boot/grub/grub.cfg
-	mkdir -p build/boot/grub/i386-pc
-	cp -r $(HOME)/opt/lib/grub/i386-pc/* build/boot/grub/i386-pc
-	rm build/boot/grub/i386-pc/*.img
-	grub-mkimage -O i386-pc -d $(HOME)/opt/lib/grub/i386-pc -o core.img -c grub.cfg --prefix=/boot/grub iso9660 biosdisk
-	cat $(HOME)/opt/lib/grub/i386-pc/cdboot.img core.img > build/boot/grub/i386-pc/eltorito.img
-	cat $(HOME)/opt/lib/grub/i386-pc/boot.img core.img > embedded.img
-	xorriso -report_about HINT -as mkisofs -graft-points -b boot/grub/i386-pc/eltorito.img -no-emul-boot -boot-info-table --embedded-boot embedded.img --protective-msdos-label -o arial.iso -r build --sort-weight 0 / --sort-weight 1 /boot
+iso: arial.elf
+	mkdir build
+	cp arial.elf limine.cfg limine/limine.sys limine/limine-cd.bin limine/limine-eltorito-efi.bin build
+	xorriso -as mkisofs -b limine-cd.bin -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-eltorito-efi.bin -efi-boot-part --efi-boot-image --protective-msdos-label build -o arial.iso
+	./limine/limine-install arial.iso
 
 run: iso
 	qemu-system-i386 -cdrom arial.iso

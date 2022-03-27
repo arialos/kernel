@@ -18,7 +18,7 @@ multiboot_header:
     .long 0
     .long 0
     .long 0
-    .long 0 # 1 = Text mode only, 2 = Graphics
+    .long 0 # 1 = Text mode only, 0 = Graphics
     .long 0 # Screen Width
     .long 0 # Screen Height
     .long 32
