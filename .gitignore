@@ -2,6 +2,8 @@ toolchain/gcc
 toolchain/binutils
 toolchain/build
 
+.DS_Store
+
 src/**/*.o
 src/**/*.d
 arial.bin

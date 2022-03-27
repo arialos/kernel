@@ -68,6 +68,7 @@ void terminalPutChar(char c)
     {
         currentRow++;
         currentColumn = 0;
+        return;
     }
     else
     {
