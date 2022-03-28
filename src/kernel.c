@@ -1,9 +1,10 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "multiboot.h"
+#include "include/multiboot.h"
 
-#include "include/vga.h"    
+#include "include/vbe.h" 
+#include "include/vga.h"   
 #include "include/tty.h"
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
@@ -12,7 +13,6 @@ void main(multiboot_info_t *mbi, unsigned long magic)
 {
     /* Initialize terminal interface */
     initTerminal();
-
 
 
     printF("[ MULTIBOOT ] Checking for Magic Header... ");
@@ -50,9 +50,8 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     (mbi->framebuffer_height != 0) ? printF(mbi->framebuffer_height) : printF("\4Failed!");
     printF("\n");
 
+    initVBE((struct vbe_info_t*)mbi->vbe_mode_info);
 
     /* Newline support is left as an exercise. */
     printF("\n\7Welcome to the Arial Kernel\n");
-
-    fillrect((uint16_t *)0xB8000, 0, 320, 200, 100,100);
 }

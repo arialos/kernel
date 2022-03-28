@@ -7,6 +7,8 @@
     "regex": "cpp",
     "sstream": "cpp",
     "strstream": "cpp",
-    "string.h": "c"
+    "string.h": "c",
+    "multiboot.h": "c",
+    "font.h": "c"
   }
 }
