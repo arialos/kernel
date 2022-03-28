@@ -6,8 +6,9 @@
 
 
 static uint32_t fgColor, bgColor;
-
+#define MIN(x,y) ((x<y)?x:y)
 #define vbeColor(r, g, b)  ((r << 16)|(g << 8)|(b << 0))
+
 bool initVBE( multiboot_info_t *vbe);
 void vbePutString(const char* str);
 

@@ -14,46 +14,46 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     /* Initialize terminal interface */
     // initTerminal();
 
+    if(!initVBE(mbi)) initTerminal;
 
-    // printF("[ MULTIBOOT ] Checking for Magic Header... ");
-    // (magic != MULTIBOOT_BOOTLOADER_MAGIC) ? printF("\4Failed!\n") : printF("\2Success!\n");
+    vbePutString("[ MULTIBOOT ] Checking for Magic Header... ");
+    (magic != MULTIBOOT_BOOTLOADER_MAGIC) ? vbePutString("Failed!\n") : vbePutString("Success!\n");
     
-    // printF("[ MULTIBOOT ] Checking for Memory Size... ");
-    // (mbi->mem_lower != 0) ? printF("\2Success!\n") : printF("\4Failed!\n");
+    vbePutString("[ MULTIBOOT ] Checking for Memory Size... ");
+    (mbi->mem_lower != 0) ? vbePutString("Success!\n") : vbePutString("Failed!\n");
 
-    // printF("[ MULTIBOOT ] Checking for Boot Loader Name... ");
-    // (mbi->boot_loader_name != 0) ? printF("\2Success!\n") : printF("\4Failed!\n");
+    vbePutString("[ MULTIBOOT ] Checking for Boot Loader Name... ");
+    (mbi->boot_loader_name != 0) ? vbePutString("Success!\n") : vbePutString("Failed!\n");
 
-    // printF("[ MULTIBOOT ] Checking for Kernel Command Line... ");
-    // (mbi->cmdline != 0) ? printF("\2Success!\n") : printF("\4Failed!\n");
+    vbePutString("[ MULTIBOOT ] Checking for Kernel Command Line... ");
+    (mbi->cmdline != 0) ? vbePutString("Success!\n") : vbePutString("Failed!\n");
 
-    // printF("[ MULTIBOOT ] Checking for Module Count... ");
-    // (mbi->mods_count != 0) ? printF("\2Success!\n") : printF("\4Failed!\n");
+    vbePutString("[ MULTIBOOT ] Checking for Module Count... ");
+    (mbi->mods_count != 0) ? vbePutString("Success!\n") : vbePutString("Failed!\n");
 
-    // printF("[ VIDEO ] Checking Graphics Mode... ");
-    // (CHECK_FLAG (mbi->flags, 12)) ? printF("\2VGA Graphics Mode!\n") : printF("\4VGA Text Mode!\n");
+    vbePutString("[ VIDEO ] Checking Graphics Mode... ");
+    (CHECK_FLAG (mbi->flags, 12)) ? vbePutString("VBE Graphics Mode!\n") : vbePutString("VGA Text Mode!\n");
 
-    // printF("[ VIDEO ] Checking Framebuffer... ");
-    // (CHECK_FLAG (mbi->flags, 6)) ? printF("\2Framebuffer Found!\n") : printF("\4No Framebuffer Found!\n");
+    vbePutString("[ VIDEO ] Checking Framebuffer... ");
+    (CHECK_FLAG (mbi->flags, 6)) ? vbePutString("Framebuffer Found!\n") : vbePutString("No Framebuffer Found!\n");
 
-    // printF("[ VIDEO ] Checking Framebuffer Address... ");
-    // (mbi->framebuffer_addr != 0) ? printF("\2Success!\n") : printF("\4Failed!\n");
+    vbePutString("[ VIDEO ] Checking Framebuffer Address... ");
+    (mbi->framebuffer_addr != 0) ? vbePutString("Success!\n") : vbePutString("Failed!\n");
 
-    // printF("[ VIDEO ] Checking Framebuffer Pitch... ");
-    // (mbi->framebuffer_pitch != 0) ? printF("\2Success!\n") : printF("\4Failed!\n");
+    vbePutString("[ VIDEO ] Checking Framebuffer Pitch... ");
+    (mbi->framebuffer_pitch != 0) ? vbePutString("Success!\n") : vbePutString("Failed!\n");
 
-    // printF("[ VIDEO ] Checking Framebuffer Width... ");
-    // (mbi->framebuffer_width != 0) ? printF(mbi->framebuffer_width) : printF("\4Failed!");
-    // printF("\n");
+    vbePutString("[ VIDEO ] Checking Framebuffer Width... ");
+    (mbi->framebuffer_width != 0) ? vbePutString(mbi->framebuffer_width) : vbePutString("Failed!");
+    vbePutString("\n");
 
-    // printF("[ VIDEO ] Checking Framebuffer Height... ");
-    // (mbi->framebuffer_height != 0) ? printF(mbi->framebuffer_height) : printF("\4Failed!");
-    // printF("\n");
+    vbePutString("[ VIDEO ] Checking Framebuffer Height... ");
+    (mbi->framebuffer_height != 0) ? vbePutString(mbi->framebuffer_height) : vbePutString("Failed!");
+    vbePutString("\n");
 
-    initVBE(mbi);
 
-    vbeDrawPixel(0, 0, vbeColor(0xFF, 0xFF, 0xFF));
+    vbePutString("Welcome to the Arial Kernel!");
 
     // /* Newline support is left as an exercise. */
-    // printF("\n\7Welcome to the Arial Kernel\n");
+    // vbePutString("\n\7Welcome to the Arial Kernel\n");
 }
