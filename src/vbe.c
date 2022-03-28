@@ -18,7 +18,7 @@ const uint16_t *vgaHeight = &fbHeight;
 static int cursorX, cursorY;
 static uint32_t fgColor, bgColor;
 
-void gfx_drawpixel(int x, int y, uint32_t col)
+void vbeDrawPixel(int x, int y, uint32_t col)
 {
     ((uint32_t*)framebuffer)[y * fbWidth + x] = col;
 }
@@ -33,6 +33,7 @@ void vbeClear(uint32_t col)
         p += fbBPP;
     }
 }
+
 
 void vbeDrawCharactor(int x, int y, char c, uint32_t fg, uint32_t bg)
 {
@@ -89,21 +90,22 @@ void vbePutString(const char* str)
     }
 }
 
-bool initVBE(struct vbe_info_t *vbe) {
-    framebuffer = (uint8_t *)vbe->physbase;
-    fbWidth = vbe->Xres;
-    fbHeight = vbe->Yres;
-    fbBPP = vbe->bpp / 8;
+bool initVBE( multiboot_info_t *vbe) {
+    framebuffer = (uint8_t *)vbe->framebuffer_addr;
+    fbWidth = vbe->framebuffer_width;
+    fbHeight = vbe->framebuffer_height;
+    fbBPP = vbe->framebuffer_bpp / 8;
 
     if (fbBPP != 4) return false;
 
     // Clear the buffer and set everything black
-    vbeClear(vbeColor(0,0,0));
+    vbeClear(vbeColor(0xff, 0xff, 0xff));
 
     cursorX, cursorY = 0;
     fgColor = vbeColor(0xff, 0xff, 0xff);
     bgColor = vbeColor(0, 0, 0);
 
-    vbePutString("Hello, world!\n");
+    vbeDrawPixel(100, 100, fgColor);
+
     return true;
 }

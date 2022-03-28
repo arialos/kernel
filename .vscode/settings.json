@@ -9,6 +9,7 @@
     "strstream": "cpp",
     "string.h": "c",
     "multiboot.h": "c",
-    "font.h": "c"
+    "font.h": "c",
+    "stdint.h": "c"
   }
 }

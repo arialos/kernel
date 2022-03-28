@@ -41,7 +41,7 @@ iso: arial.elf
 	./limine/limine-install arial.iso
 
 run: iso
-	qemu-system-i386 -cdrom arial.iso
+	qemu-system-i386 -cdrom arial.iso -vga std
 
 clean:
 	rm -f $(OBJS) *.o */*.o */*/*.o
