@@ -1,10 +1,10 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "include/multiboot.h"
-#include "include/string.h"
-#include "include/vbe.h"
-#include "include/font.h"
+#include "multiboot.h"
+#include "string.h"
+#include "vbe.h"
+#include "font.h"
 
 static uint8_t *framebuffer = NULL;
 static uint16_t fbWidth;

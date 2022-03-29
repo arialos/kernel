@@ -10,6 +10,7 @@
     "string.h": "c",
     "multiboot.h": "c",
     "font.h": "c",
-    "stdint.h": "c"
+    "stdint.h": "c",
+    "vbe.h": "c"
   }
 }

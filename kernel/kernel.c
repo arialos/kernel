@@ -1,11 +1,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "include/multiboot.h"
+#include "multiboot.h"
 
-#include "include/vbe.h" 
-#include "include/vga.h"   
-#include "include/tty.h"
+#include "vbe.h" 
+#include "vga.h"   
+#include "tty.h"
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 

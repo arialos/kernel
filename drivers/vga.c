@@ -1,8 +1,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "include/vga.h"
-#include "include/string.h"
+#include "vga.h"
+#include "string.h"
 
 static const size_t vgaWidth = 80;
 static const size_t vgaHeight = 25;
