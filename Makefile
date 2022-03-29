@@ -48,8 +48,8 @@ run: iso
 	qemu-system-i386 -cdrom arial.iso -vga std
 
 clean:
-	@rm -f $(OBJS) *.o */*.o */*/*.o
-	@rm -f $(OBJS:.o=.d) *.d */*.d */*/*.d
+	@rm -f $(OBJS) *.o **/*.o **/**/*.o
+	@rm -f $(OBJS:.o=.d) *.d **/*.d **/**/*.d
 	@rm -f arial.*
 	@rm -f *.img
 	@rm -r build
