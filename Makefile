@@ -42,7 +42,7 @@ iso: arial.elf
 	@mkdir build
 	@cp arial.elf limine.cfg limine/limine.sys limine/limine-cd.bin limine/limine-eltorito-efi.bin build
 	@xorriso -as mkisofs -b limine-cd.bin -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-eltorito-efi.bin -efi-boot-part --efi-boot-image --protective-msdos-label build -o arial.iso
-	@./limine/limine-install arial.iso
+	@./limine/limine-s2deploy arial.iso
 
 run: iso
 	qemu-system-i386 -cdrom arial.iso -vga std
