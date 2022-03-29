@@ -52,7 +52,12 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     vbePutString("\n");
 
 
-    vbePutString("Welcome to the Arial Kernel!");
+    vbePutString("\nWelcome to the Arial Kernel!");
+
+    vbeDrawRect(((mbi->framebuffer_width / 2) - 50 +8), ((mbi->framebuffer_height / 2) - 50 +8), 100, 100, vbeColor(0, 0, 0));
+    vbeDrawRect(((mbi->framebuffer_width / 2) - 47 +8), ((mbi->framebuffer_height / 2) - 47 +8), 94, 94, vbeColor(0xFF, 0xFF, 0xFF));
+    
+    vbeDrawRect(((mbi->framebuffer_width / 2) - 50 -8), ((mbi->framebuffer_height / 2) - 50 -8), 100, 100, vbeColor(0, 0, 0));
 
     // /* Newline support is left as an exercise. */
     // vbePutString("\n\7Welcome to the Arial Kernel\n");

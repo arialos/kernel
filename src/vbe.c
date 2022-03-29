@@ -23,6 +23,18 @@ void vbeDrawPixel(int x, int y, uint32_t col)
     ((uint32_t*)framebuffer)[y * fbWidth + x] = col;
 }
 
+void vbeDrawRect(int x, int y, int w, int h, uint32_t col)
+{
+    int i, j;
+    for( i = 0; i < h; i++)
+    {
+        for( j = 0; j < w; j++)
+        {
+            ((uint32_t*)framebuffer)[(i+y) * fbWidth + (j+x)] = col;
+        }
+    }
+}
+
 void vbeClear(uint32_t col)
 {
     uint8_t *p = framebuffer;
@@ -69,32 +81,6 @@ void vbePutCharactor(char ch)
     
         vbeDrawCharactor(cursorX, cursorY, ch);
         cursorX += FONT_WIDTH;
-    
-    // if(ch != '\n')
-    // {
-    //     vbeDrawCharactor(cursorX, cursorY, ch, fgColor, bgColor);
-    //     cursorX += FONT_WIDTH;
-    //     if(cursorX >= fbWidth)
-    //     {
-    //         cursorX = 0;
-    //         cursorY += FONT_HEIGHT;
-    //         if(cursorY >= fbHeight)
-    //         {
-    //             vbeClear(bgColor);
-    //             cursorY = 0;
-    //         }
-    //     }
-    // }
-    // else
-    // {
-    //     cursorX = 0;
-    //     cursorY += FONT_HEIGHT;
-    //     if(cursorY >= fbHeight)
-    //     {
-    //         vbeClear(bgColor);
-    //         cursorY = 0;
-    //     }
-    // }
 }
 
 void vbePutString(const char* str)
@@ -114,23 +100,11 @@ bool initVBE( multiboot_info_t *vbe) {
     if (fbBPP != 4) return false;
 
     // Clear the buffer and set everything black
-    vbeClear(vbeColor(0,0,0));
+    vbeClear(vbeColor(0xFF,0xFF,0xFF));
 
     cursorX, cursorY = 0;
-    fgColor = vbeColor(0xff, 0xff, 0xff);
-    bgColor = vbeColor(0, 0, 0);
-
-   
-    int i, j;
- 
-    for (i = 0; i < 100; i++) {
-        for (j = 0; j < 140; j++) {
-            //putpixel(vram, 64 + j, 64 + i, (r << 16) + (g << 8) + b);
-
-            ((uint32_t*)framebuffer)[(j+300) * fbWidth + (i+20)] = vbeColor(0, 0xff, 0);
-
-        }
-    }
+    fgColor = vbeColor(0, 0, 0);
+    bgColor = vbeColor(0xFF, 0xFF, 0xFF);
 
 
     return true;

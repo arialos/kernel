@@ -11,7 +11,7 @@ static uint32_t fgColor, bgColor;
 
 bool initVBE( multiboot_info_t *vbe);
 void vbePutString(const char* str);
-
+void vbeDrawRect(int x, int y, int w, int h, uint32_t col);
 void vbeDrawPixel(int x, int y, uint32_t col);
 
 #endif
