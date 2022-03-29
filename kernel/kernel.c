@@ -1,10 +1,10 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "multiboot.h"
 
+#include "multiboot.h"
 #include "vbe.h" 
-#include "vga.h"   
+#include "tty.h"   
 #include "tty.h"
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
@@ -14,7 +14,7 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     /* Initialize terminal interface */
     // initTerminal();
 
-    if(!initVBE(mbi)) initTerminal;
+    if(!initVBE(mbi)) initTty();
 
     vbePutString("[ MULTIBOOT ] Checking for Magic Header... ");
     (magic != MULTIBOOT_BOOTLOADER_MAGIC) ? vbePutString("Failed!\n") : vbePutString("Success!\n");

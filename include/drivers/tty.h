@@ -1,5 +1,5 @@
-#ifndef VGA_H
-#define VGA_H
+#ifndef TTY_H
+#define TTY_H
  
 #include <stdint.h>
  
@@ -22,12 +22,11 @@ enum vgaColor {
 	vgaColorWhite = 15,
 };
  
-static inline uint8_t vgaEntryColor(enum vgaColor fg, enum vgaColor bg) {
-	return fg | bg << 4;
-}
- 
-static inline uint16_t vgaEntry(unsigned char uc, uint8_t color) {
-	return (uint16_t) uc | (uint16_t) color << 8;
-}
+#define ttyColor(fg, bg) ((bg << 4) | fg )
+#define ttyEntry(c, color) ((uint16_t) (c | (color << 8)))
+
+void ttyClear ();
+void ttyPutString(const char *data);
+bool initTty();
 
 #endif

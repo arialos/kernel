@@ -11,6 +11,7 @@
     "multiboot.h": "c",
     "font.h": "c",
     "stdint.h": "c",
-    "vbe.h": "c"
+    "vbe.h": "c",
+    "stdmath.h": "c"
   }
 }
