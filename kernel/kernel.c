@@ -52,10 +52,10 @@ void main(multiboot_info_t *mbi, unsigned long magic)
 
     printf("\nWelcome to the Arial Kernel!\n");
 
-    vbeDrawRect(((mbi->framebuffer_width / 2) - 50 + 8), ((mbi->framebuffer_height / 2) - 50 + 8), 100, 100, vbeColor(0, 0, 0));
-    vbeDrawRect(((mbi->framebuffer_width / 2) - 47 + 8), ((mbi->framebuffer_height / 2) - 47 + 8), 94, 94, vbeColor(0xFF, 0xFF, 0xFF));
+    vbeDrawRect(((mbi->framebuffer_width / 2) - 50 + 8), ((mbi->framebuffer_height / 2) - 50 + 8), 100, 100, vbeColor(0xFF, 0xFF, 0xFF));
+    vbeDrawRect(((mbi->framebuffer_width / 2) - 47 + 8), ((mbi->framebuffer_height / 2) - 47 + 8), 94, 94, vbeColor(0, 0, 0));
 
-    vbeDrawRect(((mbi->framebuffer_width / 2) - 50 - 8), ((mbi->framebuffer_height / 2) - 50 - 8), 100, 100, vbeColor(0, 0, 0));
+    vbeDrawRect(((mbi->framebuffer_width / 2) - 50 - 8), ((mbi->framebuffer_height / 2) - 50 - 8), 100, 100, vbeColor(0xFF, 0xFF, 0xFF));
 
     cursorY = ((mbi->framebuffer_height / 2) - 60);
     cursorX = ((mbi->framebuffer_width / 2) - (strlen("arial.os") * fontWidth / 2));

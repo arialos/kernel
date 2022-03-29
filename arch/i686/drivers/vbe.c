@@ -124,7 +124,7 @@ int printf(const char *fmt, ...)
                 fgColor = vbeColor(0xFF, 0, 0);
                 break;
             case '3':
-                fgColor = vbeColor(0, 0, 0);
+                fgColor = vbeColor(0xFF, 0xFF, 0xFF);
                 break;
             case 'c':
                 vbePutCharactor(va_arg(ap, int));
@@ -164,12 +164,12 @@ bool initVBE(multiboot_info_t *vbe)
         return false;
 
     // Clear the buffer and set everything black
-    vbeClear(vbeColor(0xFF, 0xFF, 0xFF));
+    vbeClear(vbeColor(0, 0, 0));
 
     cursorX =10;
     cursorY = 5;
-    fgColor = vbeColor(0, 0, 0);
-    bgColor = vbeColor(0xFF, 0xFF, 0xFF);
+    fgColor = vbeColor(0xFF, 0xFF, 0xFF);
+    bgColor = vbeColor(0, 0, 0);
 
     return true;
 }

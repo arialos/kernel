@@ -4,8 +4,8 @@ toolchain/build
 
 .DS_Store
 
-src/**/*.o
-src/**/*.d
+**/*.o
+**/*.d
 arial.*
 
 build
