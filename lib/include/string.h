@@ -1,10 +1,8 @@
-#ifdef STRING_H
-#define STRING_H
+#ifndef LIBSTRING_H
+#define LIBSTRING_H
 
 #include <stddef.h>
 
-void* memset(void *buf, int val, size_t sz);
-void* memcpy(void *dest, void *src, size_t sz);
 size_t strlen(const char *str);
 
 #endif

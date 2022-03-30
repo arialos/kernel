@@ -12,6 +12,7 @@
     "font.h": "c",
     "stdint.h": "c",
     "vbe.h": "c",
-    "stdmath.h": "c"
+    "stdmath.h": "c",
+    "stddef.h": "c"
   }
 }
