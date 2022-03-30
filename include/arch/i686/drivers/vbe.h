@@ -2,8 +2,10 @@
 #define VBE_H
 
 #include <stdint.h>
+
+#include "libmath.h"
+
 #include "multiboot.h"
-#include "stdmath.h"
 
 #define vbeColor(r, g, b)  ((r << 16)|(g << 8)|(b << 0))
 

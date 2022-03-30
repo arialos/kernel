@@ -2,10 +2,11 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdarg.h>
-#include "stdmath.h"
+
+#include "libmath.h"
+#include "libstring.h"
 
 #include "multiboot.h"
-#include "string.h"
 #include "vbe.h"
 #include "font.h"
 

@@ -2,8 +2,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "libstring.h"
+
 #include "tty.h"
-#include "string.h"
 
 static const size_t vgaWidth = 80;
 static const size_t vgaHeight = 25;

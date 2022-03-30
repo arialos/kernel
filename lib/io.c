@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdint.h>
 
 void* memset(void *buf, int val, size_t sz)
 {
