@@ -1,6 +1,18 @@
 #include <stddef.h>
 #include <stdint.h>
 
+void outb (uint16_t port, uint8_t val)
+{
+    asm volatile ("outb %1, %0": :"dN" (port), "a" (val));
+}
+
+uint8_t inb(uint16_t port)
+{
+    uint8_t ret;
+    asm volatile ("inb %1, %0" : "=a" (ret) : "dN" (port));
+    return ret;
+}
+
 void* memset(void *buf, int val, size_t sz)
 {
     for(size_t i = 0; i < sz; ++i)
