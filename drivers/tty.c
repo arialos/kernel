@@ -11,7 +11,7 @@ static const size_t vgaHeight = 25;
 
 static size_t currentRow;
 static size_t currentColumn;
-static uint8_t fgColor, bgColor;
+static uint8_t ttyFgColor, ttyBgColor;
 static uint16_t *terminalBuffer = (uint16_t *)0xB8000;
 
 void ttyClear ()
@@ -20,7 +20,7 @@ void ttyClear ()
     {
         for (size_t x = 0; x < vgaWidth; x++)
         {
-            terminalBuffer[y * vgaWidth + x] = ttyEntry(' ', ttyColor(fgColor, bgColor));
+            terminalBuffer[y * vgaWidth + x] = ttyEntry(' ', ttyColor(ttyFgColor, ttyBgColor));
         }
     }
 }
@@ -46,7 +46,7 @@ void ttyPutCharactor(char c)
             currentRow = 0;
         }
     }
-    terminalBuffer[currentRow * vgaWidth + currentColumn] = ttyEntry(c, ttyColor(fgColor, bgColor));
+    terminalBuffer[currentRow * vgaWidth + currentColumn] = ttyEntry(c, ttyColor(ttyFgColor, ttyBgColor));
 }
 
 void ttyPutString(const char *data)
@@ -60,8 +60,8 @@ bool initTty()
     currentRow = 0;
     currentColumn = 0;
 
-    fgColor = vgaColorLightBlue;
-    bgColor = vgaColorBlack;
+    ttyFgColor = vgaColorLightBlue;
+    ttyBgColor = vgaColorBlack;
 
     ttyClear();
 
