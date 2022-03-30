@@ -7,7 +7,7 @@ A simple x86 hobby OS built in C. Designed to help myself feel more conformable 
     - [x] Switch existing Debug and Info functions to VBE over VGA
     - [ ] Allow easy switching of printing function from VGA to VBE and vice-versa
     - [x] Have a pretty logo in the center of the screen
-- [ ] GDT, irqs and ircs
+- [ ] GDT, IDT and irqs
     - [ ] Get hardware interrupts
     - [ ] Map software interrupts
     - [ ] Simple Keyboard driver
