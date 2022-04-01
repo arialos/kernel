@@ -7,15 +7,24 @@
 #include "tty.h"
 #include "font.h"
 
+#include "idt.h"
+#include "isr.h"
+#include "irq.h"
+#include "gdt.h"
+
 #define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
 
 void main(multiboot_info_t *mbi, unsigned long magic)
 {
-    /* Initialize terminal interface */
-    // initTerminal();
-
+    // Initialize terminal interface
     if (!initGFX(mbi))
         initTty();
+
+    gdtInit();
+    idtInit();
+
+    irqInit();
+    isrInit();
 
     printf("[ MULTIBOOT ] Checking for Magic Header... ");
     (magic == MULTIBOOT_BOOTLOADER_MAGIC) ? printf("Success! 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC) : printf("Failed!\n");

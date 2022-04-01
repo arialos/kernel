@@ -34,12 +34,9 @@ stack_top:
     .global _start
 _start:
 	mov $stack_top, %esp
-
-    push %eax
-    push %ebx
-    
+    push %eax # push the multiboot header onto the stack
+    push %ebx # push the multiboot magic number onto the stack
 	call main
-	
 	cli
 
 1:	hlt

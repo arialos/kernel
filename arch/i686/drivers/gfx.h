@@ -2,6 +2,7 @@
 #define VBE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "libmath.h"
 

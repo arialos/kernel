@@ -13,6 +13,7 @@
     "stdint.h": "c",
     "vbe.h": "c",
     "stdmath.h": "c",
-    "stddef.h": "c"
+    "stddef.h": "c",
+    "stdio.h": "c"
   }
 }
