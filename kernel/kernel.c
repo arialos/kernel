@@ -2,7 +2,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "libio.h"
+
 #include "multiboot.h"
+#include "version.h"
+#include "keyboard.h"
 #include "gfx.h"
 #include "tty.h"
 #include "font.h"
@@ -41,6 +45,8 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     printf("[ MULTIBOOT ] Checking for Module Count... ");
     (mbi->mods_count != 0) ? printf("Success!\n") : printf("Failed!\n");
 
+    printf("\n");
+
     printf("[ VIDEO ] Checking Graphics Mode... ");
     (CHECK_FLAG(mbi->flags, 12)) ? printf("VBE Graphics Mode!\n") : printf("VGA Text Mode!\n");
 
@@ -59,16 +65,21 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     printf("[ VIDEO ] Checking Framebuffer Height... ");
     (mbi->framebuffer_height != 0) ? printf("%dpx\n", mbi->framebuffer_height) : printf("Failed!\n");
 
+    printf("\n");
+    initKeyboard();
+
+    
+
     printf("\nWelcome to the Arial Kernel!\n");
+    printf("Version: %s\n", KERNEL_VERSION);
+    printf("Codename: %s\n", KERNEL_CODENAME);
 
     gfxDrawRect(((mbi->framebuffer_width / 2) - 50 + 8), ((mbi->framebuffer_height / 2) - 50 + 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
     gfxDrawRect(((mbi->framebuffer_width / 2) - 47 + 8), ((mbi->framebuffer_height / 2) - 47 + 8), 94, 94, gfxColor(0, 0, 0));
 
     gfxDrawRect(((mbi->framebuffer_width / 2) - 50 - 8), ((mbi->framebuffer_height / 2) - 50 - 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
 
-    cursorY = ((mbi->framebuffer_height / 2) - 60);
-    cursorX = ((mbi->framebuffer_width / 2) - (strlen("arial.os") * fontWidth / 2));
-    printf("arial.os");
     // /* Newline support is left as an exercise. */
     // printf("\n\7Welcome to the Arial Kernel\n");
+
 }
