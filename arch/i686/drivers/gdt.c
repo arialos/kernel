@@ -1,5 +1,8 @@
 #include "gdt.h"
 
+struct gdt_entry gdt[3];
+struct gdt_ptr gp;
+
 static void gdtSetGate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)
 {
     /* Setup the descriptor base address */

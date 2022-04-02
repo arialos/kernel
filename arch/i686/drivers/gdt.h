@@ -17,8 +17,8 @@ struct gdt_ptr {
     uint32_t base;
 } __attribute__((packed));
 
-struct gdt_entry gdt[3];
-struct gdt_ptr gp;
+extern struct gdt_entry gdt[3];
+extern struct gdt_ptr gp;
 
 /* assembly */
 extern void gdt_flush(uint32_t);

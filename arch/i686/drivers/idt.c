@@ -2,6 +2,8 @@
 #include "libio.h"
 #include "idt.h"
 
+struct idt_entry idt[0x100];
+struct idt_ptr idtPt;
 
 void idtSetGate(uint8_t idx, uint32_t base, uint16_t sel, uint8_t flags)
 {
