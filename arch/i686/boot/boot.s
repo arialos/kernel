@@ -33,13 +33,15 @@ stack_top:
 .section .text
     .global _start
 _start:
+	cli
 	mov $stack_top, %esp
     push %eax # push the multiboot header onto the stack
     push %ebx # push the multiboot magic number onto the stack
 	call main
-	cli
 
-1:	hlt
-	jmp 1b
+.Lhang:
+	cli
+    hlt
+	jmp .Lhang
  
 .size _start, . - _start

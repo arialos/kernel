@@ -7,15 +7,18 @@ void (*intCallbacks[256])(struct regs_t) = { NULL };
 
 void setInterruptHandler (uint8_t n, void (*callback)(struct regs_t))
 {
+    printf ("[ ISR ] Setting handler for IRQ%d\n", n);
     intCallbacks[n] = callback;
 }
 
 void isrHandler(struct regs_t regs)
 {
-    if(!intCallbacks[regs.int_no])
-        return printf("[ IRQ ] Uncaught handler: 0x%x!\n", regs.int_no);
-    
-    intCallbacks[regs.int_no](regs);
+    if(intCallbacks[regs.int_no]) {
+        printf("[ ISR ] Calling handler for interrupt: 0x%x\n", regs.int_no);
+        intCallbacks[regs.int_no](regs);
+    } else {
+        printf("[ ISR ] Uncaught handler: 0x%x!\n", regs.int_no);
+    }
 }
 
 void isrInit(void)
