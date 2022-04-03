@@ -13,6 +13,16 @@ static void keyboardHandler(struct regs_t *regs) {
 
 void initKeyboard (void) {
     setInterruptHandler(IRQ(1), keyboardHandler);
+    printf("[ KEYBOARD ] Function address part 2: 0x%x\n", keyboardHandler);
+
+
+    printf("[ KEYBOARD ] Initializing keyboard... ");
+    while(1)
+        if ((inb(0x64) & 2) == 0) break;
+
+    outb(0x60, 0xF0);
+    outb(0x60, (uint8_t) 1);
+    printf("Success!\n");
     
-    printf("[ KEYBOARD ] Keyboard initialized\n");
+    printf("[ KEYBOARD ] Keyboard ready\n");
 }

@@ -50,10 +50,13 @@ void irqHandler(struct regs_t regs)
     handler = intCallbacks[regs.int_no];
 
 
-    if(!handler)
-        return printf("[ IRQ ] Uncaught handler: 0x%x!\n", regs.int_no);
+    if(handler) {
+        printf("[ IRQ ] Interrupt %d fired!\n", regs.int_no);
+        handler(regs);
+    }else {
+        printf("[ IRQ ] Uncaught handler: 0x%x!\n", regs.int_no);
+    }
     
-    handler(regs);
     
 
     /* If the IDT entry that was invoked was greater than 40

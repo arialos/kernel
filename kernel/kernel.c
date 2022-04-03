@@ -24,11 +24,21 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     if (!initGFX(mbi))
         initTty();
 
+
+    printf("Welcome to the Arial Kernel!\n");
+    printf("Version: %s\n", KERNEL_VERSION);
+    printf("Codename: %s\n\n", KERNEL_CODENAME);
+
     gdtInit();
     idtInit();
 
     irqInit();
     isrInit();
+    
+    gfxDrawRect(((mbi->framebuffer_width / 2) - 50 + 8), ((mbi->framebuffer_height / 2) - 50 + 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
+    gfxDrawRect(((mbi->framebuffer_width / 2) - 47 + 8), ((mbi->framebuffer_height / 2) - 47 + 8), 94, 94, gfxColor(0, 0, 0));
+
+    gfxDrawRect(((mbi->framebuffer_width / 2) - 50 - 8), ((mbi->framebuffer_height / 2) - 50 - 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
 
     printf("[ MULTIBOOT ] Checking for Magic Header... ");
     (magic == MULTIBOOT_BOOTLOADER_MAGIC) ? printf("Success! 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC) : printf("Failed!\n");
@@ -70,14 +80,7 @@ void main(multiboot_info_t *mbi, unsigned long magic)
 
     
 
-    printf("\nWelcome to the Arial Kernel!\n");
-    printf("Version: %s\n", KERNEL_VERSION);
-    printf("Codename: %s\n", KERNEL_CODENAME);
-
-    gfxDrawRect(((mbi->framebuffer_width / 2) - 50 + 8), ((mbi->framebuffer_height / 2) - 50 + 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
-    gfxDrawRect(((mbi->framebuffer_width / 2) - 47 + 8), ((mbi->framebuffer_height / 2) - 47 + 8), 94, 94, gfxColor(0, 0, 0));
-
-    gfxDrawRect(((mbi->framebuffer_width / 2) - 50 - 8), ((mbi->framebuffer_height / 2) - 50 - 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
+   
 
     // /* Newline support is left as an exercise. */
     // printf("\n\7Welcome to the Arial Kernel\n");

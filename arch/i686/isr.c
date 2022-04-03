@@ -8,6 +8,7 @@ void (*intCallbacks[256])(struct regs_t) = { NULL };
 void setInterruptHandler (uint8_t n, void (*callback)(struct regs_t))
 {
     printf ("[ ISR ] Setting handler for IRQ%d\n", n);
+    printf("[ ISR ] Function address part 1: 0x%x\n", callback);
     intCallbacks[n] = callback;
 }
 

@@ -1,4 +1,5 @@
 #include "gdt.h"
+#include "gfx.h"
 
 struct gdt_entry gdt[3];
 struct gdt_ptr gp;
@@ -21,6 +22,7 @@ static void gdtSetGate(int idx, uint32_t base, uint32_t limit, uint8_t access, u
 
 void gdtInit(void)
 {
+    printf("[ GDT ] Initializing GDT... ");
     gp.limit = sizeof(gdt) - 1;
     gp.base = (uint32_t)&gdt;
 
@@ -30,4 +32,5 @@ void gdtInit(void)
 
     // Push the GDT to the assembly code
     gdt_flush((uint32_t)&gp);
+    printf("Success! 0x%x\n", gp.base);
 }

@@ -19,14 +19,14 @@ multiboot_header:
     .long 0
     .long 0
     .long 0 # 1 = Text mode only, 0 = Graphics
-    .long 0 # Screen Width
-    .long 0 # Screen Height
+    .long 720 # Screen Width
+    .long 1024 # Screen Height
     .long 32
  
 .section .bss
     .align 16
 stack_bottom:
-    .skip 16384 # 16 KiB
+    .skip 32768 # 16 KiB
 stack_top:
  
 
@@ -43,5 +43,3 @@ _start:
 	cli
     hlt
 	jmp .Lhang
- 
-.size _start, . - _start
