@@ -5,6 +5,7 @@ INCLUDES = -Ilib/include -Iarch/i686 -Iarch/i686/boot -Iarch/i686/drivers -Idriv
 
 CC = $(HOME)/opt/bin/$(TARGET)
 
+VERSIONFILE = kernel/version.h
 CFILES := $(shell find $(PROJDIRS) -type f -name "*.c")
 ASMFILES := $(shell find $(PROJDIRS) -type f -name "*.s")
 HDRFILES := $(shell find $(PROJDIRS) -type f -name "*.h")
@@ -18,7 +19,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
             -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
             -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
             -Wconversion -Wstrict-prototypes
-CFLAGS := -ffreestanding -O2 -std=gnu99 $(INCLUDES) $(WARNINGS)
+CFLAGS := -ffreestanding -O2 -nostdlib -std=gnu99 $(INCLUDES) -g $(WARNINGS)
 LDFLAGS := -ffreestanding -O2 -nostdlib -lgcc
 
 .PHONY: all clean run iso
@@ -26,9 +27,15 @@ LDFLAGS := -ffreestanding -O2 -nostdlib -lgcc
 
 all: arial.elf
 
-arial.elf: $(OBJFILES) linker.ld
+arial.elf: version.h $(OBJFILES) linker.ld
 	@$(CC)-gcc -T linker.ld -o $@ $(LDFLAGS) $(OBJFILES)
 	@echo Linking $@
+
+version.h: 
+	echo "#define KERNEL_VERSION \"dx-0.0.1\"" > $(VERSIONFILE)
+	echo "#define KERNEL_CODENAME \"Palo Alto\"" >> $(VERSIONFILE)
+	echo "#define KERNEL_BUILD_DATE \"`date +%Y-%m-%d`\"" >> $(VERSIONFILE)
+	echo "#define KERNEL_BUILD_TIME \"`date +%H:%M:%S`\"" >> $(VERSIONFILE)
 
 .c.o:
 	@$(CC)-gcc -MD -c $< -o $@ $(CFLAGS)
@@ -50,6 +57,7 @@ run: iso
 clean:
 	@rm -f  *.o **/*.o **/**/*.o **/**/**/*.o
 	@rm -f  *.d **/*.d **/**/*.d **/**/**/*.d
+	@rm -f $(VERSIONFILE)
 	@rm -f arial.*
 	@rm -f *.img
 	@rm -r build
