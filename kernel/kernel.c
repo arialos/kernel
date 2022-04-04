@@ -11,11 +11,6 @@
 #include "tty.h"
 #include "font.h"
 
-#include "idt.h"
-#include "isr.h"
-#include "irq.h"
-#include "gdt.h"
-
 #define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
 
 void main(multiboot_info_t *mbi, unsigned long magic)
@@ -27,13 +22,9 @@ void main(multiboot_info_t *mbi, unsigned long magic)
 
     printf("Welcome to the Arial Kernel!\n");
     printf("Version: %s\n", KERNEL_VERSION);
-    printf("Codename: %s\n\n", KERNEL_CODENAME);
-
-    gdtInit();
-    idtInit();
-
-    irqInit();
-    isrInit();
+    printf("Codename: %s\n", KERNEL_CODENAME);
+    printf("Build date: %s\n", KERNEL_BUILD_DATE);
+    printf("Build time: %s\n\n", KERNEL_BUILD_TIME);
     
     gfxDrawRect(((mbi->framebuffer_width / 2) - 50 + 8), ((mbi->framebuffer_height / 2) - 50 + 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
     gfxDrawRect(((mbi->framebuffer_width / 2) - 47 + 8), ((mbi->framebuffer_height / 2) - 47 + 8), 94, 94, gfxColor(0, 0, 0));
@@ -76,12 +67,6 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     (mbi->framebuffer_height != 0) ? printf("%dpx\n", mbi->framebuffer_height) : printf("Failed!\n");
 
     printf("\n");
-    initKeyboard();
-
-    
-
-   
-
     // /* Newline support is left as an exercise. */
     // printf("\n\7Welcome to the Arial Kernel\n");
 

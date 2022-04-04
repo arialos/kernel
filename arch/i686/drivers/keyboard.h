@@ -1,9 +1,9 @@
-#ifndef KEYBOARD_H
-#define KEYBOARD_H
+// #ifndef KEYBOARD_H
+// #define KEYBOARD_H
 
-#include "isr.h"
+// #include "isr.h"
 
-static void keyboardHandler(struct regs_t *regs);
-void initKeyboard (void);
+// static void keyboardHandler(struct regs_t *regs);
+// void initKeyboard (void);
 
-#endif
+// #endif
