@@ -11,6 +11,10 @@
 #include "tty.h"
 #include "font.h"
 
+#include "gdt.h"
+#include "idt.h"
+#include "irq.h"
+
 #define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
 
 void main(multiboot_info_t *mbi, unsigned long magic)
@@ -45,6 +49,19 @@ void main(multiboot_info_t *mbi, unsigned long magic)
 
     printf("[ MULTIBOOT ] Checking for Module Count... ");
     (mbi->mods_count != 0) ? printf("Success!\n") : printf("Failed!\n");
+
+    printf("\n");
+
+    printf("[ GDT ] Loading GDT... Success!");
+    initGdt();
+
+    printf("[ IDT ] Loading IDT... ");
+    initIdt();
+    printf("Success!\n");
+
+    printf("[ IRQ ] Loading IRQs... ");
+    initIrq();
+    printf("Success!\n");
 
     printf("\n");
 
