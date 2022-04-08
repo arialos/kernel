@@ -15,6 +15,7 @@
     "vbe.h": "c",
     "stdmath.h": "c",
     "stddef.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "irq.h": "c"
   }
 }

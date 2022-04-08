@@ -1,21 +1,57 @@
 #include "isr.h"
+#include "irq.h"
 #include "gfx.h"
+#include "libio.h"
 
-static void (*int_callbacks[256])(struct regs_t*) = { NULL };
+char *exceptions[] = {
+    "Divide by zero Error",
+    "Debug",
+    "Non-maskable Interrupt",
+    "Breakpoint",
+    "Overflow",
+    "Bound Range Exceeded",
+    "Invalid Opcode",
+    "Device Not Available",
+    "Double Fault",
+    "Coprocessor Segment Overrun",
+    "Invalid TSS",
+    "Segment Not Present",
+    "Stack-Segment Fault",
+    "General Protection Fault",
+    "Page Fault",
+    "Reserved (15)",
+    "x87 Floating-Point Exception",
+    "Alignment Check",
+    "Machine Check",
+    "SIMD Floating-Point Exception",
+    "Virtualization Exception",
+    "Reserved (21)",
+    "Reserved (22)",
+    "Reserved (23)",
+    "Reserved (24)",
+    "Reserved (25)",
+    "Reserved (26)",
+    "Reserved (27)",
+    "Reserved (28)",
+    "Reserved (29)",
+    "Security Exception",
+    "Reserved (31)"};
 
-void registerIsrHandler(uint8_t irq, void (*handler)(struct regs_t* regs)) {
-    int_callbacks[irq] = handler;
-}
+void isrHandler(Registers reg)
+{
+    // printf("[ INTERRUPT ] %d\n", reg.id);
+    if (reg.id >= 32)
+    {
+        if (reg.id == 33)
+            printf("[ EXCEPTION ] Keyboard stuff\n");
 
-void isrHandler(struct regs_t regs) {
-    void (*handler)(struct regs_t *r);
+        if (reg.id >= 40)
+            outb(0xa0, 0x20);
 
-    if (int_callbacks[regs.int_no] !=0) {
-        printf("[ INTERRUPTS ] IRQ: %d\n", regs.int_no);
-        handler = int_callbacks[regs.int_no];
-        handler(&regs);
-        return;
+        outb(0x20, 0x20);
     }
-
-    printf("[ INTERRUPTS ] Unhandled IRQ: %d\n", regs.int_no);
+    else if (reg.id < 32)
+    {
+        printf("[ EXCEPTION ] %s\n", exceptions[reg.id]);
+    }
 }

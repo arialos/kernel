@@ -29,17 +29,16 @@ stack_bottom:
     .skip 32768 # 16 KiB
 stack_top:
  
-
 .section .text
     .global _start
 _start:
-	cli
+    cli
 	mov $stack_top, %esp
     push %eax # push the multiboot header onto the stack
     push %ebx # push the multiboot magic number onto the stack
 	call main
+    
 
 .Lhang:
-	cli
     hlt
 	jmp .Lhang

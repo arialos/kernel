@@ -1,0 +1,4 @@
+#define KERNEL_VERSION "dx-0.0.1"
+#define KERNEL_CODENAME "Palo Alto"
+#define KERNEL_BUILD_DATE "2022-04-08"
+#define KERNEL_BUILD_TIME "21:30:06"

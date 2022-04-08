@@ -52,16 +52,17 @@ void main(multiboot_info_t *mbi, unsigned long magic)
 
     printf("\n");
 
-    printf("[ GDT ] Loading GDT... Success!");
-    initGdt();
+    printf("[ GDT ] Loading GDT... Success!\n");
+    gdtInit();
 
     printf("[ IDT ] Loading IDT... ");
-    initIdt();
+    idtInit();
     printf("Success!\n");
 
     printf("[ IRQ ] Loading IRQs... ");
-    initIrq();
+    irqInit();
     printf("Success!\n");
+    irqEnable();
 
     printf("\n");
 
@@ -87,4 +88,8 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     // /* Newline support is left as an exercise. */
     // printf("\n\7Welcome to the Arial Kernel\n");
 
+    for (;;)
+    {
+        asm volatile("hlt");
+    }
 }

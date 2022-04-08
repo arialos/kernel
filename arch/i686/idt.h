@@ -3,25 +3,21 @@
 
 #include <stdint.h>
 
-struct idt_entry
+typedef struct
 {
-    uint16_t baseLow;
-    uint16_t selector;
-    uint8_t reserved;
-    uint8_t attributes;
-    uint16_t baseHigh;
-} __attribute__((packed));
+    uint16_t low;
+    uint16_t sel;
+    uint8_t zero;
+    uint8_t flags;
+    uint16_t high;
+} __attribute__((packed)) IDT;
 
-struct idtr_t
+typedef struct
 {
     uint16_t limit;
-    struct idt_entry* base;
-} __attribute__((packed));
+    uint32_t base;
+} __attribute__((packed)) IDTRegister;
 
-extern struct idt_entry idt[256];
-extern struct idtr_t idtr;
+void idtInit();
 
-void idtSetGate (uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
-void initIdt();
-
-#endif
+#endif // IDT_H_INCLUDED

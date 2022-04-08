@@ -1,53 +1,55 @@
 #include "gdt.h"
+#include "gfx.h"
 
-struct gdt_entry	gdt[3];
-struct gdt_ptr		gp;
+GDT gdt[3];
+GDTRegister gdtReg;
 
-extern void load_gdt(struct gdt_entry*);
+extern void gdtFlush(GDTRegister *gdtReg);
 
-void gdtSetGate(int number, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran) {
-    gdt[number].base_low = (base & 0xFFFF);
-    gdt[number].base_middle = (base >> 16) & 0xFF;
-    gdt[number].base_high = (base >> 24) & 0xFF;
-
-    gdt[number].limit_low = (limit & 0xFFFF);
-
-    gdt[number].granularity |= gran & 0xF0;
-    gdt[number].access = access;
+void setGDT(int num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)
+{
+    gdt[num].baseLow = base & 0xffff;
+    gdt[num].baseMid = (base >> 16) & 0xff;
+    gdt[num].baseHigh = (base >> 24) & 0xff;
+    gdt[num].limit = limit & 0xffff;
+    gdt[num].granularity = (limit >> 16) & 0x0f;
+    gdt[num].granularity |= gran & 0xf0;
+    gdt[num].access = access;
 }
 
-void initGdt () {
-    gp.limit = (sizeof (struct gdt_entry) * 6) - 1;
-    gp.base = (uint32_t) &gdt;
+void gdtInit()
+{
+    setGDT(0, 0, 0, 0, 0);
+    setGDT(1, 0, 0xffffffff, 0x9a, 0xcf);
+    setGDT(2, 0, 0xffffffff, 0x92, 0xcf);
 
-    gdtSetGate(0, 0, 0, 0, 0);
-    gdtSetGate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
-    gdtSetGate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
-    
+    gdtReg.limit = sizeof(GDT) * 3 - 1;
+    gdtReg.base = (uint32_t)&gdt;
+
     printf("[ GDT ] Debuging GDT gates\n");
     printf("[ GDT ] %d ", gdt[0]);
-    printf("%x 0x", gdt[0].base_low);
-    printf("%x 0x", gdt[0].base_middle);
-    printf("%x 0x", gdt[0].base_high);
-    printf("%x 0x", gdt[0].limit_low);
-    printf("%x 0x", gdt[0].granularity);
-    printf("%x 0x\n", gdt[0].access);
+    printf("0x%x ", gdt[0].baseLow);
+    printf("0x%x ", gdt[0].baseMid);
+    printf("0x%x ", gdt[0].baseHigh);
+    printf("0x%x ", gdt[0].limit);
+    printf("0x%x ", gdt[0].granularity);
+    printf("0x%x \n", gdt[0].access);
 
     printf("[ GDT ] %d ", gdt[1]);
-    printf("%x 0x", gdt[1].base_low);
-    printf("%x 0x", gdt[1].base_middle);
-    printf("%x 0x", gdt[1].base_high);
-    printf("%x 0x", gdt[1].limit_low);
-    printf("%x 0x", gdt[1].granularity);
-    printf("%x 0x\n", gdt[1].access);
+    printf("0x%x ", gdt[1].baseLow);
+    printf("0x%x ", gdt[1].baseMid);
+    printf("0x%x ", gdt[1].baseHigh);
+    printf("0x%x ", gdt[1].limit);
+    printf("0x%x ", gdt[1].granularity);
+    printf("0x%x \n", gdt[1].access);
 
     printf("[ GDT ] %d ", gdt[2]);
-    printf("%x 0x", gdt[2].base_low);
-    printf("%x 0x", gdt[2].base_middle);
-    printf("%x 0x", gdt[2].base_high);
-    printf("%x 0x", gdt[2].limit_low);
-    printf("%x 0x", gdt[2].granularity);
-    printf("%x 0x\n", gdt[2].access);
+    printf("0x%x ", gdt[2].baseLow);
+    printf("0x%x ", gdt[2].baseMid);
+    printf("0x%x ", gdt[2].baseHigh);
+    printf("0x%x ", gdt[2].limit);
+    printf("0x%x ", gdt[2].granularity);
+    printf("0x%x \n", gdt[2].access);
 
-    load_gdt((struct gdt_entry*)&gp);
+    gdtFlush(&gdtReg);
 }

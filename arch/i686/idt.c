@@ -1,57 +1,63 @@
 #include "idt.h"
-#include "libio.h"
 #include "isr.h"
+#include "libio.h"
 
- struct idt_entry idt[256];
- struct idtr_t idtr;
+IDT idt[256];
+IDTRegister idtReg;
 
-extern void load_idt(struct idt_entry*);
+extern void gdtFlush(IDTRegister *idtReg);
 
-void idtSetGate (uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
+void setIDT(int n, uint32_t handler)
 {
-    idt[num].baseLow = (base & 0xFFFF);
-    idt[num].baseHigh = (base >> 16) & 0xFFFF;
-    idt[num].selector = sel;
-    idt[num].reserved = 0;
-    idt[num].attributes = flags;
+    idt[n].low = handler & 0xffff;
+    idt[n].sel = 8;
+    idt[n].zero = 0;
+    idt[n].flags = 0x8e;
+    idt[n].high = (handler >> 16) & 0xffff;
 }
 
-void initIdt() {
-    idtSetGate(0, (uint32_t)isr0, 0x08, 0x8E);
-    idtSetGate(1, (uint32_t)isr1, 0x08, 0x8E);
-    idtSetGate(2, (uint32_t)isr2, 0x08, 0x8E);
-    idtSetGate(3, (uint32_t)isr3, 0x08, 0x8E);
-    idtSetGate(4, (uint32_t)isr4, 0x08, 0x8E);
-    idtSetGate(5, (uint32_t)isr5, 0x08, 0x8E);
-    idtSetGate(6, (uint32_t)isr6, 0x08, 0x8E);
-    idtSetGate(7, (uint32_t)isr7, 0x08, 0x8E);
-    idtSetGate(8, (uint32_t)isr8, 0x08, 0x8E);
-    idtSetGate(9, (uint32_t)isr9, 0x08, 0x8E);
-    idtSetGate(10, (uint32_t)isr10, 0x08, 0x8E);
-    idtSetGate(11, (uint32_t)isr11, 0x08, 0x8E);
-    idtSetGate(12, (uint32_t)isr12, 0x08, 0x8E);
-    idtSetGate(13, (uint32_t)isr13, 0x08, 0x8E);
-    idtSetGate(14, (uint32_t)isr14, 0x08, 0x8E);
-    idtSetGate(15, (uint32_t)isr15, 0x08, 0x8E);
-    idtSetGate(16, (uint32_t)isr16, 0x08, 0x8E);
-    idtSetGate(17, (uint32_t)isr17, 0x08, 0x8E);
-    idtSetGate(18, (uint32_t)isr18, 0x08, 0x8E);
-    idtSetGate(19, (uint32_t)isr19, 0x08, 0x8E);
-    idtSetGate(20, (uint32_t)isr20, 0x08, 0x8E);
-    idtSetGate(21, (uint32_t)isr21, 0x08, 0x8E);
-    idtSetGate(22, (uint32_t)isr22, 0x08, 0x8E);
-    idtSetGate(23, (uint32_t)isr23, 0x08, 0x8E);
-    idtSetGate(24, (uint32_t)isr24, 0x08, 0x8E);
-    idtSetGate(25, (uint32_t)isr25, 0x08, 0x8E);
-    idtSetGate(26, (uint32_t)isr26, 0x08, 0x8E);
-    idtSetGate(27, (uint32_t)isr27, 0x08, 0x8E);
-    idtSetGate(28, (uint32_t)isr28, 0x08, 0x8E);
-    idtSetGate(29, (uint32_t)isr29, 0x08, 0x8E);
-    idtSetGate(30, (uint32_t)isr30, 0x08, 0x8E);
-    idtSetGate(31, (uint32_t)isr31, 0x08, 0x8E);
+void idtInit()
+{
+    setIDT(0, (uint32_t)isr0);
+    setIDT(1, (uint32_t)isr1);
+    setIDT(2, (uint32_t)isr2);
+    setIDT(3, (uint32_t)isr3);
+    setIDT(4, (uint32_t)isr4);
+    setIDT(5, (uint32_t)isr5);
+    setIDT(6, (uint32_t)isr6);
+    setIDT(7, (uint32_t)isr7);
+    setIDT(8, (uint32_t)isr8);
+    setIDT(9, (uint32_t)isr9);
+    setIDT(10, (uint32_t)isr10);
+    setIDT(11, (uint32_t)isr11);
+    setIDT(12, (uint32_t)isr12);
+    setIDT(13, (uint32_t)isr13);
+    setIDT(14, (uint32_t)isr14);
+    setIDT(15, (uint32_t)isr15);
+    setIDT(16, (uint32_t)isr16);
+    setIDT(17, (uint32_t)isr17);
+    setIDT(18, (uint32_t)isr18);
+    setIDT(19, (uint32_t)isr19);
+    setIDT(20, (uint32_t)isr20);
+    setIDT(21, (uint32_t)isr21);
+    setIDT(22, (uint32_t)isr22);
+    setIDT(23, (uint32_t)isr23);
+    setIDT(24, (uint32_t)isr24);
+    setIDT(25, (uint32_t)isr25);
+    setIDT(26, (uint32_t)isr26);
+    setIDT(27, (uint32_t)isr27);
+    setIDT(28, (uint32_t)isr28);
+    setIDT(29, (uint32_t)isr29);
+    setIDT(30, (uint32_t)isr30);
+    setIDT(31, (uint32_t)isr31);
 
-    idtr.limit = sizeof (idt) - 1;
-    idtr.base = (struct idt_entry*) &idt;
+    setIDT(32, (uint32_t)irqTimer);
+    setIDT(33, (uint32_t)irqKbd);
 
-    load_idt((struct idt_entry*) &idtr);
+    setIDT(128, (uint32_t)int128);
+
+    idtReg.base = (uint32_t)&idt;
+    idtReg.limit = 256 * sizeof(IDT) - 1;
+
+    idtFlush(&idtReg);
 }
