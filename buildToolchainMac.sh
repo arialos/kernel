@@ -32,7 +32,7 @@ mkdir -p $HOME/src
 mkdir -p $PREFIX
 
 # gmp mpfr libmpc
-brew install gmp mpfr libmpc autoconf automake
+brew install gmp mpfr libmpc autoconf automake xorriso
 
 # binutils
 echo ""

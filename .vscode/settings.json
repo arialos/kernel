@@ -1,21 +1,12 @@
 {
-  "C_Cpp.errorSquiggles": "Disabled",
-  "cSpell.words": [
-    "idtr",
-    "userspace"
-  ],
-  "files.associations": {
-    "regex": "cpp",
-    "sstream": "cpp",
-    "strstream": "cpp",
-    "string.h": "c",
-    "multiboot.h": "c",
-    "font.h": "c",
-    "stdint.h": "c",
-    "vbe.h": "c",
-    "stdmath.h": "c",
-    "stddef.h": "c",
-    "stdio.h": "c",
-    "irq.h": "c"
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/*.o": true,
+    "**/*.d": true
   }
 }
