@@ -36,22 +36,40 @@ char *exceptions[] = {
     "Reserved (29)",
     "Security Exception",
     "Reserved (31)"};
+Isr interrupt_handlers[256];
 
-void isrHandler(Registers reg)
+void registerInterruptHandler(uint8_t n, Isr handler)
 {
-    // printf("[ INTERRUPT ] %d\n", reg.id);
-    if (reg.id >= 32)
+    interrupt_handlers[n] = handler;
+}
+
+/*pointers to IRQ handlers in C*/
+void *irq_routines[16] = {
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0};
+
+void interruptHandler(Registers reg)
+{
+    asm volatile("cli");
+    // Send an EOI (end of interrupt) signal to the PICs.
+    // If this interrupt involved the slave.
+    if (reg.id >= 40)
     {
-        if (reg.id == 33)
-            printf("[ EXCEPTION ] Keyboard stuff\n");
+        // Send reset signal to slave.
+        outb(0xA0, 0x20);
+    }
+    // Send reset signal to master. (As well as slave, if necessary).
+    outb(0x20, 0x20);
 
-        if (reg.id >= 40)
-            outb(0xa0, 0x20);
-
-        outb(0x20, 0x20);
+    if (interrupt_handlers[reg.id] != 0)
+    {
+        Isr handler = interrupt_handlers[reg.id];
+        handler(reg);
     }
     else if (reg.id < 32)
     {
-        printf("[ EXCEPTION ] %s\n", exceptions[reg.id]);
+        printf("[ EXCEPTION ] %s... Dumping Registers\n", exceptions[reg.id]);
+        outb(0x20, 0x20);
     }
+    asm volatile("sti");
 }

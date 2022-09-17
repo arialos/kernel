@@ -1,6 +1,7 @@
 #include "irq.h"
 #include "libio.h"
 
+// Remap the PIC to prepare for the new interrupt handlers
 void irqInit()
 {
     outb(0x20, 0x11);

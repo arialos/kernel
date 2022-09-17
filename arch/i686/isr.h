@@ -10,8 +10,10 @@ typedef struct
     uint32_t id, error;
     uint32_t eip, cs, eflags, useresp, ss;
 } __attribute__((packed)) Registers;
+typedef void (*Isr)(Registers);
 
-void isrHandler(Registers reg);
+void registerInterruptHandler(uint8_t n, Isr handler);
+void interruptHandler(Registers reg);
 
 extern void isr0();
 extern void isr1();

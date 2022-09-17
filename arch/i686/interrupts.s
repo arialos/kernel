@@ -1,4 +1,4 @@
-.extern isrHandler
+.extern interruptHandler
 
 isr_common:
 	cli
@@ -11,7 +11,7 @@ isr_common:
 	mov %ax, %fs
 	mov %ax, %gs
 	
-	call isrHandler
+	call interruptHandler
 	
 	pop %eax
 	mov %ax, %ds
