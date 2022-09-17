@@ -21,14 +21,5 @@ arial.os build: <a href="https://github.com/AsteroidsGithub/arial/commit/554dc66
 
 ## Project Design
 Overview on how I plan to build out this project and how parts of the codebase will be designed.
-### Kernel
-arial.os's kernel is designed to be partial-monolithic, a lot similar to the Linux or macOS kernels. This will give flexibilities to create new kernel modules and drivers and will reduce the overhead between userspace and kernel level calls.
-
-### Racks, Receivers and Kits
-To achieve this hybrid model, arial.os's design follows three principles 
-
-1. Optional parts of the kernel, ie Wifi Drivers are refereed to as Kits. Kits can be removed or added by the kernel at anytime and are focused around being plug and play
-2. Permanent parts of the kernel, ie VBE graphics are refereed to as Racks. Racks are meant to be fixed both in memory and in state and easily accessible by Receivers with uninterrupted communication between the two.
-3. When userspace needs to get information to or from a part of the kernel it can use a Receiver. Receivers are two-way tunnels controlled by the kernel, userspace can request to open a Receivers and send information but the kernel has full control over the creation, deletion and permissions this way ensuring that malicious code can't take over the kernel. 
 
 </p>
