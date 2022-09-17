@@ -84,12 +84,13 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     printf("[ VIDEO ] Checking Framebuffer Height... ");
     (mbi->framebuffer_height != 0) ? printf("%dpx\n", mbi->framebuffer_height) : printf("Failed!\n");
 
-    printf("\n");
-    // /* Newline support is left as an exercise. */
-    // printf("\n\7Welcome to the Arial Kernel\n");
+    printf("[ KEYBOARD ] Initializing keyboard... \n");
+    initKeyboard();
 
-    for (;;)
-    {
-        asm volatile("hlt");
-    }
+    printf("\n");
+
+    // for (;;)
+    // {
+    //     asm volatile("hlt");
+    // }
 }
