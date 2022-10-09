@@ -29,11 +29,11 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     printf("Codename: %s\n", KERNEL_CODENAME);
     printf("Build date: %s\n", KERNEL_BUILD_DATE);
     printf("Build time: %s\n\n", KERNEL_BUILD_TIME);
-    
-    gfxDrawRect(((mbi->framebuffer_width / 2) - 50 + 8), ((mbi->framebuffer_height / 2) - 50 + 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
-    gfxDrawRect(((mbi->framebuffer_width / 2) - 47 + 8), ((mbi->framebuffer_height / 2) - 47 + 8), 94, 94, gfxColor(0, 0, 0));
 
-    gfxDrawRect(((mbi->framebuffer_width / 2) - 50 - 8), ((mbi->framebuffer_height / 2) - 50 - 8), 100, 100, gfxColor(0xFF, 0xFF, 0xFF));
+    gfxDrawRect(((mbi->framebuffer_width / 1.1) - 50 + 8), ((mbi->framebuffer_height / 1.1) - 50 + 8), 100, 100, gfxColor(0x0B, 0x3C, 0x4B)); //  0B3C4B
+    gfxDrawRect(((mbi->framebuffer_width / 1.1) - 47 + 8), ((mbi->framebuffer_height / 1.1) - 47 + 8), 94, 94, gfxColor(0x00, 0x6E, 0x8D));   // 006EBD
+
+    gfxDrawRect(((mbi->framebuffer_width / 1.1) - 50 - 8), ((mbi->framebuffer_height / 1.1) - 50 - 8), 100, 100, gfxColor(0x0B, 0x56, 0x6D)); // 0B566D
 
     printf("[ MULTIBOOT ] Checking for Magic Header... ");
     (magic == MULTIBOOT_BOOTLOADER_MAGIC) ? printf("Success! 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC) : printf("Failed!\n");
@@ -59,10 +59,19 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     idtInit();
     printf("Success!\n");
 
+    printf("[ ISR ] Loading ISR... ");
+    isrInit();
+    printf("Success!\n");
+
     printf("[ IRQ ] Loading IRQs... ");
     irqInit();
     printf("Success!\n");
-    irqEnable();
+
+    printf("\n");
+
+    printf("[ ASM ] Setting interrupt flag... ");
+    asm volatile("sti");
+    printf("Success!\n");
 
     printf("\n");
 
@@ -84,13 +93,10 @@ void main(multiboot_info_t *mbi, unsigned long magic)
     printf("[ VIDEO ] Checking Framebuffer Height... ");
     (mbi->framebuffer_height != 0) ? printf("%dpx\n", mbi->framebuffer_height) : printf("Failed!\n");
 
+    printf("\n");
+
     printf("[ KEYBOARD ] Initializing keyboard... \n");
     initKeyboard();
 
     printf("\n");
-
-    // for (;;)
-    // {
-    //     asm volatile("hlt");
-    // }
 }

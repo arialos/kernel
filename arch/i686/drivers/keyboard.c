@@ -101,16 +101,7 @@ static uint8_t keyboardScanCodeSet[] = {
     '\0',
 };
 
-uint8_t scancodeToChar(uint8_t scancode)
-{
-    size_t sizeOfKeyboardScanCodeSet = sizeof(keyboardScanCodeSet) / sizeof(uint8_t);
-    if (scancode > sizeOfKeyboardScanCodeSet)
-        return 0;
-
-    return keyboardScanCodeSet[scancode] += 32;
-}
-
-static void keyboardHandler(struct regs_t *regs)
+static void keyboardHandler(struct Registers *regs)
 {
     (void)regs;
     uint8_t scancode = inb(0x60);
@@ -119,24 +110,26 @@ static void keyboardHandler(struct regs_t *regs)
     if (scancode & 0x80)
         return;
 
-    uint8_t character = scancodeToChar(scancode);
-
-    printf("%d:%s", scancode, character);
+    printf("%x ", scancode);
 }
 
 void initKeyboard(void)
 {
-    registerInterruptHandler(33, keyboardHandler);
+    irqInstallHandler(1, keyboardHandler);
     printf("[ KEYBOARD ] Driver registered successfully at: 0x%x\n", keyboardHandler);
+
+    // printf("[ PS/2 ] Probing controller status flags...\n");
+    // printf("%x ", inb(0x64));
 
     printf("[ KEYBOARD ] Waiting for Keyboard acknowledgement... ");
     while (1)
         if ((inb(0x64) & 2) == 0)
             break;
 
-    outb(0x60, 0xF0);
-    outb(0x60, 1);
-    printf("Success!\n");
+    // Get the current state of the keyboard
+    outb(0x60, 0xEE);
+    uint8_t status = inb(0x60);
+    printf("Status: %x ", status);
 
-    printf("[ KEYBOARD ] Keyboard ready\n");
+    printf("Success!\n");
 }

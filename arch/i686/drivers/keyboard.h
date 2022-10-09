@@ -3,7 +3,8 @@
 
 #include "isr.h"
 
-static void keyboardHandler(struct regs_t *regs);
+static void keyboardHandler(struct Registers *regs);
+
 void initKeyboard(void);
 
 #endif
