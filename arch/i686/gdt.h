@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef struct
+struct GDTEntry
 {
     uint16_t limit;
     uint16_t baseLow;
@@ -11,13 +11,13 @@ typedef struct
     uint8_t access;
     uint8_t granularity;
     uint8_t baseHigh;
-} __attribute__((packed)) GDT;
+} __attribute__((packed));
 
-typedef struct
+struct GDTRegisters
 {
     uint16_t limit;
     uint32_t base;
-} __attribute__((packed)) GDTRegister;
+} __attribute__((packed));
 
 void gdtInit();
 

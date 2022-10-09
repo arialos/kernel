@@ -10,6 +10,5 @@ gdtFlush:
 	movw %ax, %gs
 	movw %ax, %ss
 	jmp $0x08, $jmpFlush
-	
 jmpFlush:
 	ret

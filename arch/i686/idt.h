@@ -3,21 +3,24 @@
 
 #include <stdint.h>
 
-typedef struct
+struct IDTEntry
 {
     uint16_t low;
     uint16_t sel;
     uint8_t zero;
     uint8_t flags;
     uint16_t high;
-} __attribute__((packed)) IDT;
+} __attribute__((packed));
 
-typedef struct
+struct IDTRegisters
 {
     uint16_t limit;
     uint32_t base;
-} __attribute__((packed)) IDTRegister;
+} __attribute__((packed));
+
+extern void idtFlush(uint32_t);
 
 void idtInit();
+void setIDT(uint8_t idx, uint32_t base, uint16_t sel, uint8_t flags);
 
 #endif // IDT_H_INCLUDED
