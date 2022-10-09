@@ -5,100 +5,44 @@
 #include "isr.h"
 #include "gfx.h"
 
-static uint8_t keyboardScanCodeSet[] = {
-    '\0',
-    '\0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '0',
-    '-',
-    '=',
-    '\0',
-    '\t',
-    'q',
-    'w',
-    'e',
-    'r',
-    't',
-    'y',
-    'u',
-    'i',
-    'o',
-    'p',
-    '[',
-    ']',
-    '\n',
-    '\0',
-    'a',
-    's',
-    'd',
-    'f',
-    'g',
-    'h',
-    'j',
-    'k',
-    'l',
-    ';',
-    '\'',
-    '`',
-    '\0',
-    '\\',
-    'z',
-    'x',
-    'c',
-    'v',
-    'b',
-    'n',
-    'm',
-    ',',
-    '.',
-    '/',
-    '\0',
-    '*',
-    '\0',
-    ' ',
-    '\0',
-    /* caps lock */ '\0',
-    /* F1 */ '\0',
-    /* F2 */ '\0',
-    /* F3 */ '\0',
-    /* F4 */ '\0',
-    /* F5 */ '\0',
-    /* F6 */ '\0',
-    /* F7 */ '\0',
-    /* F8 */ '\0',
-    /* F9 */ '\0',
-    /* F10 */ '\0',
-    /* num lock */ '\0',
-    /* scroll lock */ '7',
-    '8',
-    '9',
-    '-',
-    '4',
-    '5',
-    '6',
-    '+',
-    '1',
-    '2',
-    '3',
-    '0',
-    '.',
-    '\0',
-    '\0',
-    '\0',
-    '\0',
-    '\0',
-    '\0',
-    '\0',
-    '\0',
-    '\0',
+uint8_t scancodeSetOne[128] =
+    {
+        0, 27, '1', '2', '3', '4', '5', '6', '7', '8',    /* 9 */
+        '9', '0', '-', '=', '\b',                         /* Backspace */
+        '\t',                                             /* Tab */
+        'q', 'w', 'e', 'r',                               /* 19 */
+        't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',     /* Enter key */
+        0,                                                /* 29   - Control */
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', /* 39 */
+        '\'', '`', 0,                                     /* Left shift */
+        '\\', 'z', 'x', 'c', 'v', 'b', 'n',               /* 49 */
+        'm', ',', '.', '/', 0,                            /* Right shift */
+        '*',
+        0,   /* Alt */
+        ' ', /* Space bar */
+        0,   /* Caps lock */
+        0,   /* 59 - F1 key ... > */
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, /* < ... F10 */
+        0, /* 69 - Num lock*/
+        0, /* Scroll Lock */
+        0, /* Home key */
+        0, /* Up Arrow */
+        0, /* Page Up */
+        '-',
+        0, /* Left Arrow */
+        0,
+        0, /* Right Arrow */
+        '+',
+        0, /* 79 - End key*/
+        0, /* Down Arrow */
+        0, /* Page Down */
+        0, /* Insert Key */
+        0, /* Delete Key */
+        0, 0, 0,
+        0, /* F11 Key */
+        0, /* F12 Key */
+        0, /* All other keys are undefined */
 };
 
 static void keyboardHandler(struct Registers *regs)
@@ -110,7 +54,7 @@ static void keyboardHandler(struct Registers *regs)
     if (scancode & 0x80)
         return;
 
-    printf("%x ", scancode);
+    printf("%c", scancodeSetOne[scancode]);
 }
 
 void initKeyboard(void)
