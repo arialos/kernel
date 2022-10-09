@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch with GDB",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/arial.elf",
+      "cwd": "${workspaceFolder}",
+      "args": [],
+      "targetArchitecture": "x86",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/local/bin/gdb",
+      "miDebuggerArgs": "",
+      "serverLaunchTimeout": 1000000,
+      "customLaunchSetupCommands": [
+        {
+          "text": "target remote localhost:1234",
+          "description": "Connect to QEMU remote debugger"
+        }
+      ],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "text": "file /Users/jonathanvoss/Github/arial/build/arial.elf",
+          "description": "Load binary."
+        }
+      ],
+      "preLaunchTask": "Launch QEMU"
+    }
+  ]
+}

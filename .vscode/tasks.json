@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Launch QEMU",
+      "type": "shell",
+
+      "command": "qemu-system-i386 -S -cdrom arial.iso -vga std -m 512 -gdb tcp::1234 -boot d &"
+    }
+  ]
+}

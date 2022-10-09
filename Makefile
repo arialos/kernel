@@ -19,7 +19,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
             -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
             -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
             -Wconversion -Wstrict-prototypes
-CFLAGS := -ffreestanding -O2 -nostdlib -std=gnu99 $(INCLUDES) -g $(WARNINGS)
+CFLAGS := -ffreestanding -O2 -nostdlib -std=gnu99 $(INCLUDES) -g 
 LDFLAGS := -ffreestanding -O2 -nostdlib -lgcc
 
 .PHONY: all clean run iso
