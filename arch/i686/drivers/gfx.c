@@ -102,12 +102,12 @@ bool initGFX(multiboot_info_t *mbi)
         return false;
 
     // Clear the buffer and set everything black
-    gfxFramebufferClear(gfxColor(0, 0, 0));
+    gfxFramebufferClear(gfxColor(0x00, 0x6E, 0x8D));
 
     cursorX =10;
     cursorY = 5;
     fgColor = gfxColor(0xFF, 0xFF, 0xFF);
-    bgColor = gfxColor(0, 0, 0);
+    bgColor = gfxColor(0x00, 0x6E, 0x8D);
 
     return true;
 }
