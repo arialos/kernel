@@ -1,25 +1,33 @@
-# 💾 arial.os - A x86 Hobby Operating System
-A simple x86 hobby OS built in C. Designed to help myself feel more conformable with working in lower level software development, the end goal is to get into userspace and create a semi good looking widget kit.
-## Milestones
-- [x] Setup toolchain for macOS
-- [x] VBE Graphics rendering
-    - [x] `printf` function to get better debug information
-    - [x] Switch existing Debug and Info functions to VBE over VGA
-    - [ ] Allow easy switching of printing function from VGA to VBE and vice-versa
-    - [x] Have a pretty logo in the center of the screen
-- [ ] GDT, IDT and irqs
-    - [ ] Get hardware interrupts
-    - [ ] Map software interrupts
-    - [ ] Simple Keyboard driver
-    - [ ] PS/2 Mouse Driver
+# 💾 arial - A x86 Hobby Operating System
+arial is hobbyist operating system developed in my spare time in-between school and work. It's 32 bit and targets Intel's i686 platform, with a philosophy of creating a system that is simple to use and understand both from a user and developer perspective. The current project goal is to reach a userland and have a basic window manager.
+## Milestone 1 Todo
+Whilst Milestone 1 is far away this serves a nice goal post before i tackle more complex problems like paging and threading for milestone 2.
+- [x] Refine toolchain for compatibility on Linux.
+- [x] Graphics rendering using VBE.
+    - [x] `printf` function to get better debug information.
+    - [x] Support to draw different shapes. Squares, circles, individual pixels and text.
+    - [x] Render a basic version of arial's logo using graphics library.
+    - [ ] Draw a color image.
+    - [ ] Create a text mode fallback.incase VBE doesn't start properly.
+- [x] GDT, IDT and Interrupts.
+    - [x] Create and flush GDT and IDT tables
+    - [x] Get hardware interrupts.
+    - [x] Map software interrupts.
+- [x] Simple PS/2 driver for keyboard and mouse.
+    - [x] Get interrupts 1 and 12 for activity on input devices
+    - [x] Spawn relevant events for each device after their interrupts
+    - [x] Get basic keyboard driver working and draw characters to screen
+    - [ ] Get basic mouse driver working and draw cursor to screen
+    - [ ] Handle clicks / modifier keys and store that information in event
+    - [x] Key stroke buffer for keyboard
+- [x] General house keeping 
+    - [ ] Get a system timer created. Create a clock from interrupt 33 or something?
+    - [x] Create function to find the SMBios
+    - [ ] Use SMBios to get information about cpu, bios and manufacture of machine
+    - [ ] Pull current world Date/Time from cmos 
 
 ## Screenshots
 <p align="center">
-<img src="https://media.discordapp.net/attachments/871682522629677109/958658363552575508/Screen_Shot_2022-03-30_at_10.24.03_PM.png?width=1404&height=1065" />
+<img src="https://cdn.discordapp.com/attachments/811364311795630130/1028977281948983316/Screen_Shot_2022-10-10_at_23.26.06.png" />
 <br>
-arial.os build: <a href="https://github.com/AsteroidsGithub/arial/commit/554dc66df5dd2899af4e94a24aa7a7a086b5361d">554dc66</a> running on QEMU 6.2
-
-## Project Design
-Overview on how I plan to build out this project and how parts of the codebase will be designed.
-
-</p>
+arial build: <a href="https://github.com/AsteroidsGithub/arial/commit/ebf615df6e6f2d11cf17a63ac441a6b11c27570b">ebf615d</a> running on QEMU 6.2
