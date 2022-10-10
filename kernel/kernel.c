@@ -5,6 +5,7 @@
 #include "libio.h"
 
 #include "multiboot.h"
+#include "smbios.h"
 #include "version.h"
 #include "keyboard.h"
 #include "gfx.h"
@@ -49,6 +50,11 @@ void main(multiboot_info_t *mbi, unsigned long magic)
 
     printf("[ MULTIBOOT ] Checking for Module Count... ");
     (mbi->mods_count != 0) ? printf("Success!\n") : printf("Failed!\n");
+
+    printf("\n");
+
+    if (initSMBios())
+        printf("[ SMBIOS ] SMBIOS is supported!\n");
 
     printf("\n");
 
