@@ -1,3 +1,4 @@
+// clang-format off
 #ifndef SCANCODES_H
 #define SCANCODES_H
 
