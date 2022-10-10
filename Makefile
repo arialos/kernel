@@ -30,12 +30,16 @@ all: arial.elf
 arial.elf: version.h $(OBJFILES) linker.ld
 	@$(CC)-gcc -T linker.ld -o $@ $(LDFLAGS) $(OBJFILES)
 	@echo Linking $@
+    
 
 version.h: 
-	echo "#define KERNEL_VERSION \"dx-0.0.1\"" > $(VERSIONFILE)
+	echo "#define KERNEL_VERSION \"0.1.0\"" > $(VERSIONFILE)
 	echo "#define KERNEL_CODENAME \"Palo Alto\"" >> $(VERSIONFILE)
 	echo "#define KERNEL_BUILD_DATE \"`date +%Y-%m-%d`\"" >> $(VERSIONFILE)
 	echo "#define KERNEL_BUILD_TIME \"`date +%H:%M:%S`\"" >> $(VERSIONFILE)
+	echo "#define KERNEL_BUILD_NUMBER \"`date +%Y%m%d%H%M%S`\"" >> $(VERSIONFILE)
+
+
 
 .c.o:
 	@$(CC)-gcc -MD -c $< -o $@ $(CFLAGS)
