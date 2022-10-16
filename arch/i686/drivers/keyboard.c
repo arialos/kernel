@@ -7,26 +7,43 @@
 #include "keyboard.h"
 #include "scancodes.h"
 
-void keyPressHandler( struct KeyEvent *event ) {
-    printf( "%c", event->key );
-}
+bool keyboardCapsLock = false;
+bool keyboardShift    = false;
+
+// void keyPressHandler( struct KeyEvent *event ) {
+//     printf( "%c", event->key );
+// }
 
 static void keyboardInterruptHandler( struct Registers *regs ) {
     (void)regs;
-    struct KeyEvent event;
 
     uint8_t scancode = inb( 0x60 );
 
+    switch ( scancode ) {
     // 0x80 indicates that the key was released. So we ignore it.
-    if ( scancode & 0x80 ) return;
+    case 0xAA:
+    case 0xB6: keyboardShift = false; break;
+    // 0x3A is the Caps Lock key.
+    case 0x3A: keyboardCapsLock = !keyboardCapsLock; break;
+    // Cover both left (0x2A) and right (0x36) shift keys
+    case 0x2A:
+    case 0x36: keyboardShift = !keyboardShift; break;
+    // Handle all other keys
+    default:
+        if ( scancode & 0x80 ) return;
+        printf(
+            "%c", setOneBase
+                      [( keyboardShift )      ? 1
+                       : ( keyboardCapsLock ) ? 2
+                                              : 0][scancode]
+        );
+        break;
+    }
 
-    event.scancode = scancode;
-    event.key      = setOneBase[1][scancode];
-    event.shift    = false;
-    event.ctrl     = false;
-    event.alt      = false;
+    //     if ( setOneBase[1][scancode] ==
+    //          0 ) return printf( "Unknown key: %x", scancode );
 
-    keyPressHandler( &event );
+    // printf( "%c", setOneBase[1][scancode] );
 }
 
 void initKeyboard( void ) {
