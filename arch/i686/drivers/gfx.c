@@ -39,6 +39,7 @@ void gfxDrawCharactor( int x, int y, char c ) {
     const uint8_t stop_y  = MIN( fontHeight, fbHeight - y );
     const uint8_t stop_x  = MIN( fontWidth, fbWidth - x );
     if ( c < 0 || c > 132 ) return;
+
     for ( int i = 0; i < stop_y; ++i ) {
         uint8_t mask_table[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
         for ( int j = 0; j < stop_x; ++j ) {
@@ -61,14 +62,30 @@ void gfxFramebufferClear( uint32_t col ) {
 void gfxPutCharactor( char ch )
 
 {
-    if ( ch == '\n' || cursorX + fontWidth >= fbWidth ) {
-        cursorX = 10;
+    // If the cursor is at the bottom of the screen, scroll up
+    // by the height of a character
+    if ( cursorY + fontHeight >= fbHeight ) {
+        gfxFramebufferScroll( fontHeight );
+        cursorY -= fontHeight;
+    }
+
+    if ( ch == '\n' || cursorX + fontWidth >= fbWidth - cursorPaddingX ) {
+        cursorX = cursorPaddingX;
         cursorY += fontHeight;
         return;
     }
 
     gfxDrawCharactor( cursorX, cursorY, ch );
     cursorX += fontWidth;
+}
+
+void gfxFramebufferScroll( uint16_t lines ) {
+    uint8_t *p    = framebuffer;
+    uint8_t *stop = framebuffer + fbWidth * fbHeight * fbBPP;
+    while ( p < stop ) {
+        *(uint32_t *)p = *(uint32_t *)( p + lines * fbWidth * fbBPP );
+        p += fbBPP;
+    }
 }
 
 void gfxPutString( const char *str ) {
@@ -88,8 +105,8 @@ bool initGFX( multiboot_info_t *mbi ) {
     // Clear the buffer and set everything black
     gfxFramebufferClear( gfxColor( 0x00, 0x6E, 0x8D ) );
 
-    cursorX = 10;
-    cursorY = 5;
+    cursorX = cursorPaddingX;
+    cursorY = cursorPaddingY;
     fgColor = gfxColor( 0xFF, 0xFF, 0xFF );
     bgColor = gfxColor( 0x00, 0x6E, 0x8D );
 

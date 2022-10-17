@@ -8,6 +8,8 @@
 
 #include "multiboot.h"
 
+static int cursorPaddingX = 10;
+static int cursorPaddingY = 5;
 static int cursorX, cursorY;
 static uint32_t fgColor, bgColor;
 
