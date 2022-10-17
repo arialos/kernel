@@ -7,6 +7,11 @@
 #include "irq.h"
 #include "mouse.h"
 
+uint8_t mousePacketCycle = 0;
+int8_t mouseByte[3];
+
+uint32_t mouseX, mouseY;
+
 void mouseWait( uint8_t WaitType ) {
     uint32_t timeout = 100000;
 
@@ -19,7 +24,7 @@ void mouseWait( uint8_t WaitType ) {
                 if ( !( ( inb( 0x64 ) & 0x02 ) ) )
                 return;
 
-        printf( "[ MOUSE ] Timeout!\n" );
+        // printf( "[ MOUSE ] Timeout!\n" );
         return;
     }
 }
@@ -27,24 +32,62 @@ void mouseWait( uint8_t WaitType ) {
 static void MouseInterruptHandler( struct Registers *regs ) {
     (void)regs;
 
-    printf( "[ Mouse ] Mouse interrupt handler called: %x\n", inb( 0x60 ) );
+    uint8_t status = inb( 0x64 );
+    while ( status & 0x01 ) {
+        uint8_t mouseData = inb( 0x60 );
+        if ( status & 0x20 ) {
+            switch ( mousePacketCycle ) {
+            case 0:
+                mouseByte[0] = mouseData;
+                if ( !( mouseData & 0x08 ) ) return;
+                mousePacketCycle++;
+                break;
+            case 1:
+                mouseByte[1] = mouseData;
+                mousePacketCycle++;
+                break;
+            case 2:
+                mouseByte[2] = mouseData;
+                // Handle an overflow of mouse data
+                if ( mouseByte[0] & 0x80 || mouseByte[0] & 0x40 ) return;
+
+                mousePacketCycle = 0;
+
+                if ( mouseByte[1] == 0 && mouseByte[2] == 0 ) return;
+
+                // printf(
+                //     "X: %d, Y: %d\nX: %d, Y: %d\n\n", mouseByte[1],
+                //     mouseByte[2], mouseX, mouseY
+                // );
+
+                mouseX += mouseByte[1];
+                mouseY -= mouseByte[2];
+                gfxDrawRect( mouseX, mouseY, 10, 10, 0x00FF00 );
+
+                break;
+            }
+        }
+        status = inb( 0x64 );
+    }
 }
 
 bool initMouse( void ) {
     uint8_t status;
 
+    mouseX, mouseY = 0;
+
     printf( "[ MOUSE ] Enabling second PS/2 Port\n" );
     mouseWait( 1 );
     outb( 0x64, 0xA8 );
 
-    printf( "[ MOUSE ] Reading PS/2 controller setup byte" );
+    printf( "[ MOUSE ] Reading PS/2 controller setup byte\n" );
     mouseWait( 1 );
     outb( 0x64, 0x20 );
     mouseWait( 0 );
 
     status = inb( 0x60 ) | 2;
 
-    printf( "[ MOUSE ] Writing status to PS/2 controller setup byte" );
+    printf( "\n[ MOUSE ] Writing status to PS/2 controller setup byte\n" );
     mouseWait( 1 );
     outb( 0x64, 0x60 );
     mouseWait( 1 );

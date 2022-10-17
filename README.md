@@ -13,12 +13,12 @@ Whilst Milestone 1 is far away this serves a nice goal post before i tackle more
     - [x] Create and flush GDT and IDT tables
     - [x] Get hardware interrupts.
     - [x] Map software interrupts.
-- [ ] Simple PS/2 driver for keyboard and mouse.
+- [x] Simple PS/2 driver for keyboard and mouse.
     - [x] Get interrupts 1 and 12 for activity on input devices.
     - [x] Spawn relevant events for each device after their interrupts.
     - [x] Get basic keyboard driver working and draw characters to screen.
-    - [ ] Get basic mouse driver working and draw cursor to screen.
-    - [ ] Handle clicks / modifier keys and store that information in event
+    - [x] Get basic mouse driver working and draw cursor to screen.
+    - [x] Handle clicks / modifier keys and store that information in event
     - [x] Key stroke buffer for keyboard
 - [ ] General house keeping 
     - [ ] Get a system timer created. Create a clock from interrupt 33 or something?
