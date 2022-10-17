@@ -1,9 +1,10 @@
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "libio.h"
 
 #include "gfx.h"
-#include "isr.h"
+#include "irq.h"
 #include "keyboard.h"
 #include "scancodes.h"
 
@@ -46,8 +47,9 @@ static void keyboardInterruptHandler( struct Registers *regs ) {
     // printf( "%c", setOneBase[1][scancode] );
 }
 
-void initKeyboard( void ) {
+bool initKeyboard( void ) {
     irqInstallHandler( 1, keyboardInterruptHandler );
+
     printf(
         "[ KEYBOARD ] Driver registered successfully at: 0x%x\n",
         keyboardInterruptHandler
@@ -66,4 +68,5 @@ void initKeyboard( void ) {
     printf( "Status: %x ", status );
 
     printf( "Success!\n" );
+    return true;
 }

@@ -7,6 +7,7 @@
 #include "font.h"
 #include "gfx.h"
 #include "keyboard.h"
+#include "mouse.h"
 #include "multiboot.h"
 #include "smbios.h"
 #include "tty.h"
@@ -125,6 +126,11 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
 
     printf( "[ KEYBOARD ] Initializing keyboard... \n" );
     initKeyboard();
+
+    printf( "\n" );
+
+    printf( "[ MOUSE ] Initializing mouse...\n" );
+    initMouse();
 
     printf( "\n" );
 }

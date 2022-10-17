@@ -7,6 +7,6 @@
 #include "isr.h"
 
 static void keyboardHandler( struct Registers *regs );
-void initKeyboard( void );
+bool initKeyboard( void );
 
 #endif
