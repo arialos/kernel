@@ -1,7 +1,7 @@
 TARGET=i686-elf
 PROJDIRS := arch drivers fonts kernel lib
 DESTDIR = build
-INCLUDES = -Ilib/include -Iarch/i686 -Iarch/i686/boot -Iarch/i686/drivers -Idrivers -Ifonts
+INCLUDES = -Ilib/include -Iarch/i686  -Iarch/i686/boot -Iarch/i686/cpu -Iarch/i686/graphics -Iarch/i686/ps2 -Iarch/i686/system -Idrivers -Ifonts
 
 CC = $(HOME)/opt/bin/$(TARGET)
 

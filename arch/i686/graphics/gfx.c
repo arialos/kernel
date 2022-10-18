@@ -32,6 +32,34 @@ void gfxDrawRect( int x, int y, int w, int h, uint32_t col ) {
     }
 }
 
+uint32_t *cursorDrawBuffer = NULL;
+
+// Grab the pixels below the cursor and store them in memory
+// so we can restore them later
+void gfxSaveCursor( int x, int y, int w, int h ) {
+    int i, j;
+    for ( i = 0; i < h; i++ ) {
+        for ( j = 0; j < w; j++ ) {
+            cursorDrawBuffer[i * w + j] =
+                ( (uint32_t *)framebuffer )[( i + y ) * fbWidth + ( j + x )];
+        }
+    }
+}
+
+// Restore the pixels below the cursor from memory
+void gfxRestoreCursor( int x, int y, int w, int h ) {
+    // If the cursor framebuffer is empty, don't try to restore it
+    // if ( cursorDrawBuffer == NULL ) return;
+
+    int i, j;
+    for ( i = 0; i < h; i++ ) {
+        for ( j = 0; j < w; j++ ) {
+            ( (uint32_t *)framebuffer )[( i + y ) * fbWidth + ( j + x )] =
+                cursorDrawBuffer[i * w + j];
+        }
+    }
+}
+
 void gfxDrawCharactor( int x, int y, char c ) {
     uint8_t *line_addr = framebuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
     const uint32_t fg  = fgColor;
