@@ -21,8 +21,8 @@ static uint32_t fgColor, bgColor;
 bool initGFX( multiboot_info_t *mbi );
 void gfxFramebufferClear( uint32_t col );
 
-void gfxSaveCursor( int x, int y, int w, int h );
-void gfxRestoreCursor( int x, int y, int w, int h );
+void gfxSaveTempBuffer( int x, int y, int w, int h, uint32_t *tempBuffer );
+void gfxRestoreTempBuffer( int x, int y, int w, int h, uint32_t *tempBuffer );
 
 void gfxDrawPixel( int x, int y, uint32_t col );
 void gfxDrawCharactor( int x, int y, char c, uint32_t col );

@@ -11,6 +11,7 @@ uint8_t mousePacketCycle = 0;
 int8_t mouseByte[3];
 
 uint32_t mouseX, mouseY;
+uint32_t *cursorBuffer = NULL;
 
 void mouseWait( uint8_t WaitType ) {
     uint32_t timeout = 100000;
@@ -59,10 +60,12 @@ static void MouseInterruptHandler( struct Registers *regs ) {
                 //     "X: %d, Y: %d\nX: %d, Y: %d\n\n", mouseByte[1],
                 //     mouseByte[2], mouseX, mouseY
                 // );
-                gfxRestoreCursor( mouseX, mouseY, 16, 16 );
+                gfxRestoreTempBuffer( mouseX, mouseY, 16, 16, cursorBuffer );
+
                 mouseX += mouseByte[1];
                 mouseY -= mouseByte[2];
-                gfxSaveCursor( mouseX, mouseY, 16, 16 );
+
+                gfxSaveTempBuffer( mouseX, mouseY, 16, 16, cursorBuffer );
                 gfxDrawCharactor( mouseX, mouseY, '^', 0xFFFFFF );
 
                 if ( mouseByte[0] & 0x01 )
