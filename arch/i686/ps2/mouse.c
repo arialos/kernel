@@ -63,13 +63,13 @@ static void MouseInterruptHandler( struct Registers *regs ) {
                 mouseX += mouseByte[1];
                 mouseY -= mouseByte[2];
                 gfxSaveCursor( mouseX, mouseY, 16, 16 );
-                gfxDrawRect( mouseX, mouseY, 16, 16, 0x00FF00 );
+                gfxDrawCharactor( mouseX, mouseY, '^', 0xFFFFFF );
 
                 if ( mouseByte[0] & 0x01 )
-                    gfxDrawRect( mouseX, mouseY, 16, 16, 0x0000FF );
+                    gfxDrawCharactor( mouseX, mouseY, '^', 0x00FF00 );
                 // printf( "Left button pressed\n" );
                 if ( mouseByte[0] & 0x02 )
-                    gfxDrawRect( mouseX, mouseY, 16, 16, 0xFF0000 );
+                    gfxDrawCharactor( mouseX, mouseY, '^', 0xFF0000 );
 
                 break;
             }

@@ -25,6 +25,7 @@ void gfxSaveCursor( int x, int y, int w, int h );
 void gfxRestoreCursor( int x, int y, int w, int h );
 
 void gfxDrawPixel( int x, int y, uint32_t col );
+void gfxDrawCharactor( int x, int y, char c, uint32_t col );
 void gfxDrawRect( int x, int y, int w, int h, uint32_t col );
 
 void gfxPutString( const char *str );

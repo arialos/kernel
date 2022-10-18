@@ -60,9 +60,8 @@ void gfxRestoreCursor( int x, int y, int w, int h ) {
     }
 }
 
-void gfxDrawCharactor( int x, int y, char c ) {
+void gfxDrawCharactor( int x, int y, char c, uint32_t col ) {
     uint8_t *line_addr = framebuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
-    const uint32_t fg  = fgColor;
     const uint16_t stride = fbWidth * fbBPP;
     const uint8_t stop_y  = MIN( fontHeight, fbHeight - y );
     const uint8_t stop_x  = MIN( fontWidth, fbWidth - x );
@@ -72,7 +71,7 @@ void gfxDrawCharactor( int x, int y, char c ) {
         uint8_t mask_table[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
         for ( int j = 0; j < stop_x; ++j ) {
             if ( systemFont[c][i] & mask_table[j] )
-                ( (uint32_t *)line_addr )[j] = fg;
+                ( (uint32_t *)line_addr )[j] = col;
         }
         line_addr += stride;
     }
@@ -103,7 +102,7 @@ void gfxPutCharactor( char ch )
         return;
     }
 
-    gfxDrawCharactor( cursorX, cursorY, ch );
+    gfxDrawCharactor( cursorX, cursorY, ch, fgColor );
     cursorX += fontWidth;
 }
 
