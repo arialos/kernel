@@ -25,7 +25,8 @@ void gfxSaveTempBuffer( int x, int y, int w, int h, uint32_t *tempBuffer );
 void gfxRestoreTempBuffer( int x, int y, int w, int h, uint32_t *tempBuffer );
 
 void gfxDrawPixel( int x, int y, uint32_t col );
-void gfxDrawCharactor( int x, int y, char c, uint32_t col );
+void gfxDrawCursor( int x, int y, uint32_t col );
+void gfxDrawCharacter( int x, int y, char c, uint32_t col );
 void gfxDrawRect( int x, int y, int w, int h, uint32_t col );
 
 void gfxPutString( const char *str );

@@ -12,7 +12,7 @@ static void printHex( unsigned int n ) {
     unsigned mask  = 0xF0000000;
     unsigned shift = 28;
     while ( mask ) {
-        gfxPutCharactor( hex_table[( n & mask ) >> shift] );
+        gfxPutCharacter( hex_table[( n & mask ) >> shift] );
         mask >>= 4;
         shift -= 4;
     }
@@ -26,7 +26,7 @@ int printf( const char *fmt, ... ) {
         switch ( ch ) {
         case '%': {
             switch ( *fmt++ ) {
-            case 'c': gfxPutCharactor( va_arg( ap, int ) ); break;
+            case 'c': gfxPutCharacter( va_arg( ap, int ) ); break;
             case 's': // string
                 gfxPutString( va_arg( ap, const char * ) );
                 break;
@@ -40,7 +40,7 @@ int printf( const char *fmt, ... ) {
             }
             break;
         }
-        default: gfxPutCharactor( ch ); break;
+        default: gfxPutCharacter( ch ); break;
         }
     }
     va_end( ap );
