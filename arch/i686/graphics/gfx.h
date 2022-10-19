@@ -8,8 +8,8 @@
 
 #include "multiboot.h"
 
-static uint16_t fbWidth;
-static uint16_t fbHeight;
+extern uint16_t fbWidth;
+extern uint16_t fbHeight;
 
 static int cursorPaddingX = 10;
 static int cursorPaddingY = 5;

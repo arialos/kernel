@@ -13,13 +13,9 @@
 
 static uint8_t *screenbuffer = NULL;
 
-static uint16_t fbWidth;
-static uint16_t fbHeight;
-
+uint16_t fbWidth;
+uint16_t fbHeight;
 static uint8_t fbBPP;
-
-const uint16_t *vgaWidth  = &fbWidth;
-const uint16_t *vgaHeight = &fbHeight;
 
 /**
  * @brief Draws a Pixel to the main framebuffer inside the video memory.

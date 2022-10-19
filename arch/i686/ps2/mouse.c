@@ -10,7 +10,7 @@
 uint8_t mousePacketCycle = 0;
 int8_t mouseByte[3];
 
-uint32_t mouseX, mouseY;
+uint32_t mouseX, mouseY = 0;
 uint32_t *cursorBuffer = NULL;
 
 void mouseWait( uint8_t WaitType ) {
@@ -54,23 +54,22 @@ static void MouseInterruptHandler( struct Registers *regs ) {
 
                 mousePacketCycle = 0;
 
-                // if ( mouseByte[1] == 0 && mouseByte[2] == 0 ) return;
-
-                // printf(
-                //     "X: %d, Y: %d\nX: %d, Y: %d\n\n", mouseByte[1],
-                //     mouseByte[2], mouseX, mouseY
-                // );
                 gfxRestoreTempBuffer( mouseX, mouseY, 16, 16, cursorBuffer );
 
-                mouseX += mouseByte[1];
-                mouseY -= mouseByte[2];
+                if ( mouseX + mouseByte[1] > 0 &&
+                     mouseX + mouseByte[1] < fbWidth )
+                    mouseX += mouseByte[1];
+
+                if ( mouseY - mouseByte[2] > 0 &&
+                     mouseY - mouseByte[2] < fbHeight )
+                    mouseY -= mouseByte[2];
 
                 gfxSaveTempBuffer( mouseX, mouseY, 16, 16, cursorBuffer );
                 gfxDrawCursor( mouseX, mouseY, 0xFFFFFF );
 
                 if ( mouseByte[0] & 0x01 )
                     gfxDrawCursor( mouseX, mouseY, 0x00FF00 );
-                // printf( "Left button pressed\n" );
+
                 if ( mouseByte[0] & 0x02 )
                     gfxDrawCursor( mouseX, mouseY, 0xFF0000 );
 
@@ -83,9 +82,6 @@ static void MouseInterruptHandler( struct Registers *regs ) {
 
 bool initMouse( void ) {
     uint8_t status;
-
-    mouseX = fbWidth / 2;
-    mouseY = fbHeight / 2;
 
     printf( "[ MOUSE ] Enabling second PS/2 Port\n" );
     mouseWait( 1 );
