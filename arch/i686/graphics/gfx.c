@@ -50,9 +50,18 @@ void gfxDrawRect( int x, int y, int w, int h, uint32_t col ) {
     }
 }
 
+// This has to be the stupidest code I've ever written
+// because of the pointer to temBuffer always being
+// NULL when it is passed into the function to restore
+// I can't simply return check it in gfxRestoreTempBuffer
+// so in turn a STUPID workaround is this abomination
+// as long as only one buffer is being updated EVER
+// this will work.
+bool beenDrawn = false;
+
 /**
- * @brief Copies a portion of the framebuffer between the coordinates given and
- * stores it in temporary buffer for redrawing later on.
+ * @brief Copies a portion of the framebuffer between the coordinates given
+ * and stores it in temporary buffer for redrawing later on.
  *
  * @param x (int) The Horizontal position of the buffer region.
  * @param y (int) The Vertical position of the buffer region.
@@ -67,6 +76,7 @@ void gfxSaveTempBuffer( int x, int y, int w, int h, uint32_t *tempBuffer ) {
                 ( (uint32_t *)screenbuffer )[( i + y ) * fbWidth + ( j + x )];
         }
     }
+    beenDrawn = true;
 }
 
 /**
@@ -80,6 +90,11 @@ void gfxSaveTempBuffer( int x, int y, int w, int h, uint32_t *tempBuffer ) {
  * @param tempBuffer (uint32_t) The pointer to the temporary buffer.
  */
 void gfxRestoreTempBuffer( int x, int y, int w, int h, uint32_t *tempBuffer ) {
+    // This is really janky and bad code to be honest
+    // but whatever it works while we are only drawing
+    // the mouse cursor
+    if ( !beenDrawn ) return;
+
     for ( int i = 0; i < h; i++ ) {
         for ( int j = 0; j < w; j++ ) {
             ( (uint32_t *)screenbuffer )[( i + y ) * fbWidth + ( j + x )] =
