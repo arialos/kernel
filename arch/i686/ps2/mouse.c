@@ -57,8 +57,6 @@ static void MouseInterruptHandler( struct Registers *regs ) {
                 // If the cursorBuffer is empty then don't restore the temp
                 // buffer
 
-                gfxRestoreTempBuffer( mouseX, mouseY, 16, 16, cursorBuffer );
-
                 if ( mouseX + mouseByte[1] > 0 &&
                      mouseX + mouseByte[1] < fbWidth )
                     mouseX += mouseByte[1];
@@ -66,9 +64,6 @@ static void MouseInterruptHandler( struct Registers *regs ) {
                 if ( mouseY - mouseByte[2] > 0 &&
                      mouseY - mouseByte[2] < fbHeight )
                     mouseY -= mouseByte[2];
-
-                gfxSaveTempBuffer( mouseX, mouseY, 16, 16, cursorBuffer );
-                gfxDrawCursor( mouseX, mouseY, 0xFFFFFF );
 
                 // if ( mouseByte[0] & 0x01 ) {
                 //     // Test is the mouse is over a window

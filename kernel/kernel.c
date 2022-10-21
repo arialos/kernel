@@ -12,6 +12,7 @@
 #include "smbios.h"
 #include "tty.h"
 #include "version.h"
+#include "window.h"
 
 #include "gdt.h"
 #include "idt.h"
@@ -95,6 +96,12 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
 
     printf( "\n" );
 
+    printf( "[ MEMORY ] Memory Upper: 0x%x\n", mbi->mem_upper );
+    printf( "[ MEMORY ] Memory Lower: 0x%x\n", mbi->mem_lower );
+    printf( "[ MEMORY ] Memory Map address: 0x%x\n", mbi->mmap_addr );
+
+    printf( "\n" );
+
     printf( "[ VIDEO ] Checking Graphics Mode... " );
     ( CHECK_FLAG( mbi->flags, 12 ) ) ? printf( "VBE Graphics Mode!\n" )
                                      : printf( "VGA Text Mode!\n" );
@@ -106,11 +113,6 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
     printf( "[ VIDEO ] Checking Framebuffer Address... " );
     ( mbi->framebuffer_addr != 0 )
         ? printf( "Success! 0x%x\n", mbi->framebuffer_addr )
-        : printf( "Failed!\n" );
-
-    printf( "[ VIDEO ] Checking Framebuffer Pitch... " );
-    ( mbi->framebuffer_pitch != 0 )
-        ? printf( "Success! %d\n", mbi->framebuffer_pitch )
         : printf( "Failed!\n" );
 
     printf( "[ VIDEO ] Checking Framebuffer Width... " );
@@ -133,4 +135,6 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
     initMouse();
 
     printf( "\n" );
+
+    // initWindowManager();
 }
