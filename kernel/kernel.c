@@ -30,23 +30,6 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
     printf( "Build date: %s\n", KERNEL_BUILD_DATE );
     printf( "Build time: %s\n\n", KERNEL_BUILD_TIME );
 
-    gfxDrawRect(
-        ( ( mbi->framebuffer_width / 1.1 ) - 50 + 8 ),
-        ( ( mbi->framebuffer_height / 1.1 ) - 50 + 8 ), 100, 100,
-        gfxColor( 0x0B, 0x3C, 0x4B )
-    ); //  0B3C4B
-    gfxDrawRect(
-        ( ( mbi->framebuffer_width / 1.1 ) - 47 + 8 ),
-        ( ( mbi->framebuffer_height / 1.1 ) - 47 + 8 ), 94, 94,
-        gfxColor( 0x00, 0x6E, 0x8D )
-    ); // 006EBD
-
-    gfxDrawRect(
-        ( ( mbi->framebuffer_width / 1.1 ) - 50 - 8 ),
-        ( ( mbi->framebuffer_height / 1.1 ) - 50 - 8 ), 100, 100,
-        gfxColor( 0x0B, 0x56, 0x6D )
-    ); // 0B566D
-
     printf( "[ MULTIBOOT ] Checking for Magic Header... " );
     ( magic == MULTIBOOT_BOOTLOADER_MAGIC )
         ? printf( "Success! 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC )
@@ -96,8 +79,12 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
 
     printf( "\n" );
 
-    printf( "[ MEMORY ] Memory Upper: 0x%x\n", mbi->mem_upper );
-    printf( "[ MEMORY ] Memory Lower: 0x%x\n", mbi->mem_lower );
+    printf(
+        "[ MEMORY ] Memory Upper: 0x%x - %d\n", mbi->mem_upper, mbi->mem_upper
+    );
+    printf(
+        "[ MEMORY ] Memory Lower: 0x%x - %d\n", mbi->mem_lower, mbi->mem_lower
+    );
     printf( "[ MEMORY ] Memory Map address: 0x%x\n", mbi->mmap_addr );
 
     printf( "\n" );
@@ -115,13 +102,9 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
         ? printf( "Success! 0x%x\n", mbi->framebuffer_addr )
         : printf( "Failed!\n" );
 
-    printf( "[ VIDEO ] Checking Framebuffer Width... " );
-    ( mbi->framebuffer_width != 0 ) ? printf( "%dpx\n", mbi->framebuffer_width )
-                                    : printf( "Failed!\n" );
-
-    printf( "[ VIDEO ] Checking Framebuffer Height... " );
-    ( mbi->framebuffer_height != 0 )
-        ? printf( "%dpx\n", mbi->framebuffer_height )
+    printf( "[ VIDEO ] Checking Framebuffer Resolution... " );
+    ( mbi->framebuffer_width || mbi->framebuffer_height != 0 )
+        ? printf( "%dx%d\n", mbi->framebuffer_width, mbi->framebuffer_height )
         : printf( "Failed!\n" );
 
     printf( "\n" );

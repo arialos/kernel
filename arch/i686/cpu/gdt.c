@@ -33,10 +33,8 @@ void gdtInit() {
     GDTRegister.limit = ( sizeof( struct GDTEntry ) * 5 ) - 1;
     GDTRegister.base  = &gdt;
 
-    printf( "\n[ GDT ] Debugging GDT gates\n" );
-
     printf(
-        "[ GDT ] Base Low:    0x%x 0x%x 0x%x 0x%x 0x%x\n", gdt[0].baseLow,
+        "\n[ GDT ] Base Low:    0x%x 0x%x 0x%x 0x%x 0x%x\n", gdt[0].baseLow,
         gdt[1].baseLow, gdt[2].baseLow, gdt[3].baseLow, gdt[4].baseLow
     );
     printf(
@@ -56,7 +54,7 @@ void gdtInit() {
         gdt[1].access, gdt[2].access, gdt[3].access, gdt[4].access
     );
     printf(
-        "[ GDT ] Granularity: 0x%x 0x%x 0x%x 0x%x 0x%x\n\n", gdt[0].granularity,
+        "[ GDT ] Granularity: 0x%x 0x%x 0x%x 0x%x 0x%x\n", gdt[0].granularity,
         gdt[1].granularity, gdt[2].granularity, gdt[3].granularity,
         gdt[4].granularity
     );
@@ -68,7 +66,7 @@ void gdtInit() {
         sizeof( gdt ) * 3 - 1
     );
     printf(
-        "[ GDT ] Registers base:  0x%x : 0x%x\n", GDTRegister.base,
+        "[ GDT ] Registers base:  0x%x : 0x%x\n\n", GDTRegister.base,
         (uint32_t)&gdt
     );
 }
