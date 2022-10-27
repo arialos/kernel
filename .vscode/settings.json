@@ -16,5 +16,9 @@
   "C_Cpp.formatting": "clangFormat",
 
   // Format a file on save. Formatter must be available.
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "libstring.h": "c",
+    "stdint.h": "c"
+  }
 }
