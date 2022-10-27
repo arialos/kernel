@@ -32,3 +32,10 @@ void *memcpy( void *dest, void *src, size_t sz ) {
     while ( sz-- ) *(char *)dest++ = *(char *)src++;
     return dest;
 }
+
+void assertFail( const char *func, const char *file, int line ) {
+    printf(
+        "\nAssertion failed in function %s in file %s, line %d\n", func, file,
+        line
+    );
+}

@@ -5,10 +5,12 @@
 #include "libio.h"
 
 #include "font.h"
+#include "fpu.h"
 #include "gfx.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "multiboot.h"
+#include "paging.h"
 #include "smbios.h"
 #include "tty.h"
 #include "version.h"
@@ -21,6 +23,8 @@
 #define CHECK_FLAG( flags, bit ) ( ( flags ) & ( 1 << ( bit ) ) )
 
 void main( multiboot_info_t *mbi, unsigned long magic ) {
+    enableFpu();
+
     // Initialize terminal interface
     if ( !initGFX( mbi ) ) initTty();
 
@@ -73,12 +77,6 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
 
     printf( "\n" );
 
-    printf( "[ ASM ] Setting interrupt flag... " );
-    asm volatile( "sti" );
-    printf( "Success!\n" );
-
-    printf( "\n" );
-
     printf(
         "[ MEMORY ] Memory Upper: 0x%x - %d\n", mbi->mem_upper, mbi->mem_upper
     );
@@ -86,6 +84,14 @@ void main( multiboot_info_t *mbi, unsigned long magic ) {
         "[ MEMORY ] Memory Lower: 0x%x - %d\n", mbi->mem_lower, mbi->mem_lower
     );
     printf( "[ MEMORY ] Memory Map address: 0x%x\n", mbi->mmap_addr );
+    printf( "[ MEMORY ] Enabling Paging... \n" );
+    initPaging();
+
+    printf( "\n" );
+
+    printf( "[ ASM ] Setting interrupt flag... " );
+    asm volatile( "sti" );
+    printf( "Success!\n" );
 
     printf( "\n" );
 

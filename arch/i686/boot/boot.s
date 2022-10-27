@@ -23,10 +23,9 @@ multiboot_header:
     .long 1024 # Screen Height
     .long 32
  
-.section .bss
-    .align 16
+.section .stack
 stack_bottom:
-    .skip 32768 # 16 KiB
+    .skip 32768 # 32 KiB
 stack_top:
  
 .section .text
@@ -40,5 +39,6 @@ _start:
     
 
 .Lhang:
+    cli
     hlt
 	jmp .Lhang
