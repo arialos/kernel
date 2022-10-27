@@ -9,14 +9,16 @@
 
 #include "font.h"
 #include "gfx.h"
+#include "heap.h"
 #include "multiboot.h"
 
-static uint8_t *screenbuffer = NULL;
-static uint8_t *backbuffer   = NULL;
+uint8_t *screenbuffer = NULL;
+uint8_t *backbuffer   = NULL;
 
 uint16_t fbWidth;
 uint16_t fbHeight;
-static uint8_t fbBPP;
+uint8_t fbBPP;
+uint16_t fbStride;
 
 /**
  * @brief Draws a Pixel to the main framebuffer inside the video memory.
@@ -27,7 +29,7 @@ static uint8_t fbBPP;
  * "gfxColor" macro for this.
  */
 inline void gfxDrawPixel( int32_t x, int32_t y, uint32_t col ) {
-    ( (uint32_t *)screenbuffer )[y * fbWidth + x] = col;
+    ( (uint32_t *)backbuffer )[y * fbWidth + x] = col;
 }
 
 /**
@@ -46,7 +48,7 @@ void gfxDrawRect( int32_t x, int32_t y, int32_t w, int32_t h, uint32_t col ) {
     int32_t i, j;
     for ( i = 0; i < h; i++ ) {
         for ( j = 0; j < w; j++ ) {
-            ( (uint32_t *)screenbuffer )[( i + y ) * fbWidth + ( j + x )] = col;
+            ( (uint32_t *)backbuffer )[( i + y ) * fbWidth + ( j + x )] = col;
         }
     }
 }
@@ -76,7 +78,7 @@ void gfxSaveTempBuffer(
     for ( int32_t i = 0; i < h; i++ ) {
         for ( int32_t j = 0; j < w; j++ ) {
             tempBuffer[i * w + j] =
-                ( (uint32_t *)screenbuffer )[( i + y ) * fbWidth + ( j + x )];
+                ( (uint32_t *)backbuffer )[( i + y ) * fbWidth + ( j + x )];
         }
     }
     beenDrawn = true;
@@ -102,7 +104,7 @@ void gfxRestoreTempBuffer(
 
     for ( int32_t i = 0; i < h; i++ ) {
         for ( int32_t j = 0; j < w; j++ ) {
-            ( (uint32_t *)screenbuffer )[( i + y ) * fbWidth + ( j + x )] =
+            ( (uint32_t *)backbuffer )[( i + y ) * fbWidth + ( j + x )] =
                 tempBuffer[i * w + j];
         }
     }
@@ -118,7 +120,7 @@ void gfxRestoreTempBuffer(
  * "gfxColor" macro for this.
  */
 void gfxDrawCharacter( int32_t x, int32_t y, char c, uint32_t col ) {
-    uint8_t *line_addr = screenbuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
+    uint8_t *line_addr = backbuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
     const uint16_t stride = fbWidth * fbBPP;
     const uint8_t stop_y  = MIN( fontHeight, fbHeight - y );
     const uint8_t stop_x  = MIN( fontWidth, fbWidth - x );
@@ -143,7 +145,7 @@ void gfxDrawCharacter( int32_t x, int32_t y, char c, uint32_t col ) {
  * "gfxColor" macro for this.
  */
 void gfxDrawCursor( int32_t x, int32_t y, uint32_t col ) {
-    uint8_t *line_addr = screenbuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
+    uint8_t *line_addr = backbuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
     const uint16_t stride = fbWidth * fbBPP;
     const uint8_t stop_y  = MIN( fontHeight, fbHeight - y );
     const uint8_t stop_x  = MIN( fontWidth, fbWidth - x );
@@ -165,8 +167,8 @@ void gfxDrawCursor( int32_t x, int32_t y, uint32_t col ) {
  * the "gfxColor" macro for this.
  */
 void gfxFramebufferClear( uint32_t col ) {
-    uint8_t *p    = screenbuffer;
-    uint8_t *stop = screenbuffer + fbWidth * fbHeight * fbBPP;
+    uint8_t *p    = backbuffer;
+    uint8_t *stop = backbuffer + fbWidth * fbHeight * fbBPP;
     while ( p < stop ) {
         *(uint32_t *)p = col;
         p += fbBPP;
@@ -200,8 +202,8 @@ void gfxPutCharacter( char ch )
 }
 
 void gfxFramebufferScroll( uint16_t lines ) {
-    uint8_t *p    = screenbuffer;
-    uint8_t *stop = screenbuffer + fbWidth * fbHeight * fbBPP;
+    uint8_t *p    = backbuffer;
+    uint8_t *stop = backbuffer + fbWidth * fbHeight * fbBPP;
     while ( p < stop ) {
         *(uint32_t *)p = *(uint32_t *)( p + lines * fbWidth * fbBPP );
         p += fbBPP;
@@ -215,8 +217,7 @@ void gfxPutString( const char *str ) {
 }
 
 void gfxSwapBuffers() {
-    memcpy( screenbuffer, backbuffer, fbWidth * fbHeight * ( fbBPP / 8 ) );
-    memset( backbuffer, 0, fbWidth * fbHeight * ( fbBPP / 8 ) );
+    memcpy( screenbuffer, backbuffer, fbHeight * fbStride );
 }
 
 bool initGFX( multiboot_info_t *mbi ) {
@@ -227,6 +228,9 @@ bool initGFX( multiboot_info_t *mbi ) {
     fbWidth     = mbi->framebuffer_width;
     fbHeight    = mbi->framebuffer_height;
     fbBPP       = mbi->framebuffer_bpp / 8;
+    fbStride    = mbi->framebuffer_pitch;
+
+    backbuffer = kmalloc( fbHeight * fbStride );
 
     if ( fbBPP != 4 ) return false;
 
