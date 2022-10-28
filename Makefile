@@ -57,7 +57,7 @@ iso: arial.elf
 	# @./limine/limine-s2deploy arial.iso
 
 format:
-	@clang-format -i $(SRCFILES) $(HDRFILES)
+	@clang-format -i $(CFILES) $(HDRFILES)
 
 clean:
 	@echo "Cleaning build directory..."
