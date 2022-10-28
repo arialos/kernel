@@ -17,8 +17,5 @@
 
   // Format a file on save. Formatter must be available.
   "editor.formatOnSave": true,
-  "files.associations": {
-    "libstring.h": "c",
-    "stdint.h": "c"
-  }
+
 }
