@@ -36,7 +36,7 @@ arial.elf: version.h $(OBJFILES) linker.ld
     
 
 version.h: 
-	@echo "#define KERNEL_VERSION \"0.1.3.`date +%Y%m%d%H%M%S`\"" > $(VERSIONFILE)
+	@echo "#define KERNEL_VERSION \"0.1.4.`date +%Y%m%d%H%M%S`\"" > $(VERSIONFILE)
 	@echo "#define KERNEL_CODENAME \"Palo Alto\"" >> $(VERSIONFILE)
 	@echo "#define KERNEL_BUILD_DATE \"`date +%Y-%m-%d`\"" >> $(VERSIONFILE)
 	@echo "#define KERNEL_BUILD_TIME \"`date +%H:%M:%S`\"" >> $(VERSIONFILE)
@@ -56,7 +56,8 @@ iso: arial.elf
 	@xorriso -as mkisofs -b limine-cd.bin -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-eltorito-efi.bin -efi-boot-part --efi-boot-image --protective-msdos-label build -o arial.iso
 	# @./limine/limine-s2deploy arial.iso
 
-
+format:
+	@clang-format -i $(SRCFILES) $(HDRFILES)
 
 clean:
 	@echo "Cleaning build directory..."

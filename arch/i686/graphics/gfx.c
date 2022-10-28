@@ -1,15 +1,15 @@
+#include "gfx.h"
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
+#include "font.h"
+#include "heap.h"
 #include "libio.h"
 #include "libmath.h"
 #include "libstring.h"
-
-#include "font.h"
-#include "gfx.h"
-#include "heap.h"
 #include "multiboot.h"
 
 uint8_t *screenbuffer = NULL;
@@ -28,8 +28,8 @@ uint16_t fbStride;
  * @param col (uint32_t) The byte color of the pixel. It's best to use the
  * "gfxColor" macro for this.
  */
-inline void gfxDrawPixel( int32_t x, int32_t y, uint32_t col ) {
-    ( (uint32_t *)backbuffer )[y * fbWidth + x] = col;
+inline void gfxDrawPixel(int32_t x, int32_t y, uint32_t col) {
+    ((uint32_t *)backbuffer)[y * fbWidth + x] = col;
 }
 
 /**
@@ -44,11 +44,11 @@ inline void gfxDrawPixel( int32_t x, int32_t y, uint32_t col ) {
  * @param col (uint32_t) The byte color of the rectangle. It's best to use the
  * "gfxColor" macro for this.
  */
-void gfxDrawRect( int32_t x, int32_t y, int32_t w, int32_t h, uint32_t col ) {
+void gfxDrawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t col) {
     int32_t i, j;
-    for ( i = 0; i < h; i++ ) {
-        for ( j = 0; j < w; j++ ) {
-            ( (uint32_t *)backbuffer )[( i + y ) * fbWidth + ( j + x )] = col;
+    for (i = 0; i < h; i++) {
+        for (j = 0; j < w; j++) {
+            ((uint32_t *)backbuffer)[(i + y) * fbWidth + (j + x)] = col;
         }
     }
 }
@@ -60,7 +60,9 @@ void gfxDrawRect( int32_t x, int32_t y, int32_t w, int32_t h, uint32_t col ) {
 // so in turn a STUPID workaround is this abomination
 // as long as only one buffer is being updated EVER
 // this will work.
-bool beenDrawn = false;
+
+// UPDATE: I can remove because of double buffering.
+// bool beenDrawn = false;
 
 /**
  * @brief Copies a portion of the framebuffer between the coordinates given
@@ -72,16 +74,12 @@ bool beenDrawn = false;
  * @param h (int32_t) The height of the buffer region.
  * @param tempBuffer (uint32_t) The pointer to the temporary buffer.
  */
-void gfxSaveTempBuffer(
-    int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer
-) {
-    for ( int32_t i = 0; i < h; i++ ) {
-        for ( int32_t j = 0; j < w; j++ ) {
-            tempBuffer[i * w + j] =
-                ( (uint32_t *)backbuffer )[( i + y ) * fbWidth + ( j + x )];
+void gfxSaveTempBuffer(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer) {
+    for (int32_t i = 0; i < h; i++) {
+        for (int32_t j = 0; j < w; j++) {
+            tempBuffer[i * w + j] = ((uint32_t *)backbuffer)[(i + y) * fbWidth + (j + x)];
         }
     }
-    beenDrawn = true;
 }
 
 /**
@@ -94,18 +92,10 @@ void gfxSaveTempBuffer(
  * @param h (int32_t) The height of the buffer region.
  * @param tempBuffer (uint32_t) The pointer to the temporary buffer.
  */
-void gfxRestoreTempBuffer(
-    int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer
-) {
-    // This is really janky and bad code to be honest
-    // but whatever it works while we are only drawing
-    // the mouse cursor
-    if ( !beenDrawn ) return;
-
-    for ( int32_t i = 0; i < h; i++ ) {
-        for ( int32_t j = 0; j < w; j++ ) {
-            ( (uint32_t *)backbuffer )[( i + y ) * fbWidth + ( j + x )] =
-                tempBuffer[i * w + j];
+void gfxRestoreTempBuffer(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer) {
+    for (int32_t i = 0; i < h; i++) {
+        for (int32_t j = 0; j < w; j++) {
+            ((uint32_t *)backbuffer)[(i + y) * fbWidth + (j + x)] = tempBuffer[i * w + j];
         }
     }
 }
@@ -119,18 +109,17 @@ void gfxRestoreTempBuffer(
  * @param col (uint32_t) The byte color of the character. It's best to use the
  * "gfxColor" macro for this.
  */
-void gfxDrawCharacter( int32_t x, int32_t y, char c, uint32_t col ) {
-    uint8_t *line_addr = backbuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
+void gfxDrawCharacter(int32_t x, int32_t y, char c, uint32_t col) {
+    uint8_t *line_addr    = backbuffer + (x * fbBPP) + (y * fbWidth * fbBPP);
     const uint16_t stride = fbWidth * fbBPP;
-    const uint8_t stop_y  = MIN( fontHeight, fbHeight - y );
-    const uint8_t stop_x  = MIN( fontWidth, fbWidth - x );
-    if ( c < 0 || c > 132 ) return;
+    const uint8_t stop_y  = MIN(fontHeight, fbHeight - y);
+    const uint8_t stop_x  = MIN(fontWidth, fbWidth - x);
+    if (c < 0 || c > 132) return;
 
-    for ( int32_t i = 0; i < stop_y; ++i ) {
-        uint8_t mask_table[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
-        for ( int32_t j = 0; j < stop_x; ++j ) {
-            if ( systemFont[c][i] & mask_table[j] )
-                ( (uint32_t *)line_addr )[j] = col;
+    for (int32_t i = 0; i < stop_y; ++i) {
+        uint8_t mask_table[8] = {128, 64, 32, 16, 8, 4, 2, 1};
+        for (int32_t j = 0; j < stop_x; ++j) {
+            if (systemFont[c][i] & mask_table[j]) ((uint32_t *)line_addr)[j] = col;
         }
         line_addr += stride;
     }
@@ -144,17 +133,16 @@ void gfxDrawCharacter( int32_t x, int32_t y, char c, uint32_t col ) {
  * @param col (uint32_t) The byte color of the character. It's best to use the
  * "gfxColor" macro for this.
  */
-void gfxDrawCursor( int32_t x, int32_t y, uint32_t col ) {
-    uint8_t *line_addr = backbuffer + ( x * fbBPP ) + ( y * fbWidth * fbBPP );
+void gfxDrawCursor(int32_t x, int32_t y, uint32_t col) {
+    uint8_t *line_addr    = backbuffer + (x * fbBPP) + (y * fbWidth * fbBPP);
     const uint16_t stride = fbWidth * fbBPP;
-    const uint8_t stop_y  = MIN( fontHeight, fbHeight - y );
-    const uint8_t stop_x  = MIN( fontWidth, fbWidth - x );
+    const uint8_t stop_y  = MIN(fontHeight, fbHeight - y);
+    const uint8_t stop_x  = MIN(fontWidth, fbWidth - x);
 
-    for ( int32_t i = 0; i < stop_y; ++i ) {
-        uint8_t mask_table[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
-        for ( int32_t j = 0; j < stop_x; ++j ) {
-            if ( systemCursor[i] & mask_table[j] )
-                ( (uint32_t *)line_addr )[j] = col;
+    for (int32_t i = 0; i < stop_y; ++i) {
+        uint8_t mask_table[8] = {128, 64, 32, 16, 8, 4, 2, 1};
+        for (int32_t j = 0; j < stop_x; ++j) {
+            if (systemCursor[i] & mask_table[j]) ((uint32_t *)line_addr)[j] = col;
         }
         line_addr += stride;
     }
@@ -166,10 +154,10 @@ void gfxDrawCursor( int32_t x, int32_t y, uint32_t col ) {
  * @param col (uint32_t) The byte color to use for the clear. It's best to use
  * the "gfxColor" macro for this.
  */
-void gfxFramebufferClear( uint32_t col ) {
+void gfxFramebufferClear(uint32_t col) {
     uint8_t *p    = backbuffer;
     uint8_t *stop = backbuffer + fbWidth * fbHeight * fbBPP;
-    while ( p < stop ) {
+    while (p < stop) {
         *(uint32_t *)p = col;
         p += fbBPP;
     }
@@ -181,67 +169,65 @@ void gfxFramebufferClear( uint32_t col ) {
  *
  * @param ch (char) The character to draw.
  */
-void gfxPutCharacter( char ch )
+void gfxPutCharacter(char ch)
 
 {
     // If the cursor is at the bottom of the screen, scroll up
     // by the height of a character
-    if ( cursorY + fontHeight >= fbHeight ) {
-        gfxFramebufferScroll( fontHeight );
+    if (cursorY + fontHeight >= fbHeight) {
+        gfxFramebufferScroll(fontHeight);
         cursorY -= fontHeight;
     }
 
-    if ( ch == '\n' || cursorX + fontWidth >= fbWidth - cursorPaddingX ) {
+    if (ch == '\n' || cursorX + fontWidth >= fbWidth - cursorPaddingX) {
         cursorX = cursorPaddingX;
         cursorY += fontHeight;
         return;
     }
 
-    gfxDrawCharacter( cursorX, cursorY, ch, fgColor );
+    gfxDrawCharacter(cursorX, cursorY, ch, fgColor);
     cursorX += fontWidth;
 }
 
-void gfxFramebufferScroll( uint16_t lines ) {
+void gfxFramebufferScroll(uint16_t lines) {
     uint8_t *p    = backbuffer;
     uint8_t *stop = backbuffer + fbWidth * fbHeight * fbBPP;
-    while ( p < stop ) {
-        *(uint32_t *)p = *(uint32_t *)( p + lines * fbWidth * fbBPP );
+    while (p < stop) {
+        *(uint32_t *)p = *(uint32_t *)(p + lines * fbWidth * fbBPP);
         p += fbBPP;
     }
 }
 
-void gfxPutString( const char *str ) {
-    while ( *str ) {
-        gfxPutCharacter( *str++ );
+void gfxPutString(const char *str) {
+    while (*str) {
+        gfxPutCharacter(*str++);
     }
 }
 
-void gfxSwapBuffers() {
-    memcpy( screenbuffer, backbuffer, fbHeight * fbStride );
-}
+void gfxSwapBuffers() { memcpy(screenbuffer, backbuffer, fbHeight * fbStride); }
 
-bool initGFX( multiboot_info_t *mbi ) {
+bool initGFX(multiboot_info_t *mbi) {
     screenbuffer = (uint8_t *)mbi->framebuffer_addr;
 
     // We need to allocate a screenbuffer for double buffering
 
-    fbWidth     = mbi->framebuffer_width;
-    fbHeight    = mbi->framebuffer_height;
-    fbBPP       = mbi->framebuffer_bpp / 8;
-    fbStride    = mbi->framebuffer_pitch;
+    fbWidth  = mbi->framebuffer_width;
+    fbHeight = mbi->framebuffer_height;
+    fbBPP    = mbi->framebuffer_bpp / 8;
+    fbStride = mbi->framebuffer_pitch;
 
-    backbuffer = kmalloc( fbHeight * fbStride );
+    backbuffer = kmalloc(fbHeight * fbStride);
 
-    if ( fbBPP != 4 ) return false;
+    if (fbBPP != 4) return false;
 
     // Clear the buffer and set everything black
-    gfxFramebufferClear( gfxColor( 0x00, 0x6E, 0x8D ) );
+    gfxFramebufferClear(gfxColor(0x00, 0x6E, 0x8D));
 
     cursorX = cursorPaddingX;
     cursorY = cursorPaddingY;
 
-    fgColor = gfxColor( 0xFF, 0xFF, 0xFF );
-    bgColor = gfxColor( 0x00, 0x6E, 0x8D );
+    fgColor = gfxColor(0xFF, 0xFF, 0xFF);
+    bgColor = gfxColor(0x00, 0x6E, 0x8D);
 
     return true;
 }

@@ -20,12 +20,12 @@
 ## Milestone 1 Todo
 Whilst Milestone 1 is far away this serves a nice goal post before i tackle more complex problems like paging and threading for milestone 2.
 - [x] Refine toolchain for compatibility on Linux.
-- [ ] Graphics rendering using VBE.
+- [x] Graphics rendering using VBE.
     - [x] `printf` function to get better debug information.
     - [x] Support to draw different shapes. Squares, circles, individual pixels and text.
     - [x] Render a basic version of arial's logo using graphics library.
-    - [ ] Draw a color image.
-    - [ ] Create a text mode fallback.incase VBE doesn't start properly.
+    - [x] Draw a color image.
+    - [x] Create a text mode fallback.incase VBE doesn't start properly.
 - [x] GDT, IDT and Interrupts.
     - [x] Create and flush GDT and IDT tables
     - [x] Get hardware interrupts.

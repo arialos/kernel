@@ -116,8 +116,7 @@ struct multiboot_elf_section_header_table {
     multiboot_uint32_t addr;
     multiboot_uint32_t shndx;
 };
-typedef struct multiboot_elf_section_header_table
-    multiboot_elf_section_header_table_t;
+typedef struct multiboot_elf_section_header_table multiboot_elf_section_header_table_t;
 
 struct vbe_info_t {
     uint16_t attributes;
@@ -139,7 +138,7 @@ struct vbe_info_t {
     uint32_t physbase;
     uint32_t reserved1;
     uint16_t reserved2;
-} __attribute__( ( packed ) );
+} __attribute__((packed));
 
 struct multiboot_info {
     /* Multiboot info version number */
@@ -231,7 +230,7 @@ struct multiboot_mmap_entry {
 #define MULTIBOOT_MEMORY_NVS              4
 #define MULTIBOOT_MEMORY_BADRAM           5
     multiboot_uint32_t type;
-} __attribute__( ( packed ) );
+} __attribute__((packed));
 typedef struct multiboot_mmap_entry multiboot_memory_map_t;
 
 struct multiboot_mod_list {

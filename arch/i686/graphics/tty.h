@@ -22,11 +22,11 @@ enum vgaColor {
     vgaColorWhite        = 15,
 };
 
-#define ttyColor( fg, bg )   ( ( bg << 4 ) | fg )
-#define ttyEntry( c, color ) ( (uint16_t)( c | ( color << 8 ) ) )
+#define ttyColor(fg, bg)   ((bg << 4) | fg)
+#define ttyEntry(c, color) ((uint16_t)(c | (color << 8)))
 
 void ttyClear();
-void ttyPutString( const char *data );
+void ttyPutString(const char *data);
 bool initTty();
 
 #endif

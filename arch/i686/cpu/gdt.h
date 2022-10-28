@@ -10,13 +10,13 @@ struct GDTEntry {
     uint8_t access;
     uint8_t granularity;
     uint8_t baseHigh;
-} __attribute__( ( packed ) );
+} __attribute__((packed));
 
 struct GDTRegisters {
     uint16_t limit;
     uint32_t base;
-} __attribute__( ( packed ) );
+} __attribute__((packed));
 
 void gdtInit();
 
-#endif // GDT_H_INCLUDED
+#endif  // GDT_H_INCLUDED
