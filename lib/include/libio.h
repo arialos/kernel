@@ -11,7 +11,7 @@ uint16_t inw(uint16_t port);
 void outw(uint16_t port, uint16_t val);
 
 void *memset(void *buf, int val, size_t sz);
-void *memcpy(void *dest, void *src, size_t sz);
+void *memcpy(void *dest, const void *src, size_t n);
 
 #define assert(x) \
     if (!(x)) assertFail(__func__, __FILE__, __LINE__);

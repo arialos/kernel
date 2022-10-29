@@ -11,11 +11,12 @@
   },
   // Coding style. Use "file" to load the style from a .clang-format file in the current or parent directory.
   "C_Cpp.clang_format_style": "file",
-
   // Configures the formatting engine for clangFormat.
   "C_Cpp.formatting": "clangFormat",
-
   // Format a file on save. Formatter must be available.
   "editor.formatOnSave": true,
-
+  "files.associations": {
+    "stdint.h": "c",
+    "irq.h": "c"
+  },
 }

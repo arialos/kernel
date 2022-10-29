@@ -20,140 +20,72 @@ uint16_t fbHeight;
 uint8_t fbBPP;
 uint16_t fbStride;
 
-/**
- * @brief Draws a Pixel to the main framebuffer inside the video memory.
- *
- * @param x (int32_t) The Horizontal position of the pixel.
- * @param y (int32_t) The Vertical position of the pixel.
- * @param col (uint32_t) The byte color of the pixel. It's best to use the
- * "gfxColor" macro for this.
- */
-inline void gfxDrawPixel(int32_t x, int32_t y, uint32_t col) {
-    ((uint32_t *)backbuffer)[y * fbWidth + x] = col;
-}
+inline void gfxDrawPixel(int x, int y, uint32_t col) { ((uint32_t *)backbuffer)[y * fbWidth + x] = col; }
 
-/**
- * @brief Draws a Rectangle to the main framebuffer inside the video memory. By
- * default, the rectangle is filled and will anchor from the top-left of the
- * coordinates
- *
- * @param x (int32_t) The Horizontal position of the rectangle.
- * @param y (int32_t) The Vertical position of the rectangle.
- * @param w (int32_t) The width of the rectangle.
- * @param h (int32_t) The height of the rectangle.
- * @param col (uint32_t) The byte color of the rectangle. It's best to use the
- * "gfxColor" macro for this.
- */
-void gfxDrawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t col) {
-    int32_t i, j;
-    for (i = 0; i < h; i++) {
-        for (j = 0; j < w; j++) {
-            ((uint32_t *)backbuffer)[(i + y) * fbWidth + (j + x)] = col;
-        }
+// dx = x2 − x1
+// dy = y2 − y1
+
+// for x from x1 to x2 do
+//     y = y1 + dy × (x − x1) / dx
+//     plot(x, y)
+
+void gfxDrawRect(int x, int y, int w, int h, uint32_t col) {
+    for (int i = 0; i < h; i++) {
+        // Instead of plotting pixel by pixel. Draw and fill rows of col to backbuffer
+
+        // gfxDrawHorizontalLine(x, y + i, w, col);
+
+        memset((void *)((uint32_t *)backbuffer + (y + i) * fbWidth + x), col, w * sizeof(uint32_t));
     }
 }
 
-// This has to be the stupidest code I've ever written
-// because of the pointer to temBuffer always being
-// NULL when it is passed into the function to restore
-// I can't simply return check it in gfxRestoreTempBuffer
-// so in turn a STUPID workaround is this abomination
-// as long as only one buffer is being updated EVER
-// this will work.
-
-// UPDATE: I can remove because of double buffering.
-// bool beenDrawn = false;
-
-/**
- * @brief Copies a portion of the framebuffer between the coordinates given
- * and stores it in temporary buffer for redrawing later on.
- *
- * @param x (int32_t) The Horizontal position of the buffer region.
- * @param y (int32_t) The Vertical position of the buffer region.
- * @param w (int32_t) The width of the buffer region.
- * @param h (int32_t) The height of the buffer region.
- * @param tempBuffer (uint32_t) The pointer to the temporary buffer.
- */
-void gfxSaveTempBuffer(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer) {
-    for (int32_t i = 0; i < h; i++) {
-        for (int32_t j = 0; j < w; j++) {
+void gfxSaveTempBuffer(int x, int y, int w, int h, uint32_t *tempBuffer) {
+    for (int i = 0; i < h; i++) {
+        for (int j = 0; j < w; j++) {
             tempBuffer[i * w + j] = ((uint32_t *)backbuffer)[(i + y) * fbWidth + (j + x)];
         }
     }
 }
 
-/**
- * @brief Restores a portion of the framebuffer between the coordinates given
- * from a temporary buffer.
- *
- * @param x (int32_t) The Horizontal position of the buffer region.
- * @param y (int32_t) The Vertical position of the buffer region.
- * @param w (int32_t) The width of the buffer region.
- * @param h (int32_t) The height of the buffer region.
- * @param tempBuffer (uint32_t) The pointer to the temporary buffer.
- */
-void gfxRestoreTempBuffer(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer) {
-    for (int32_t i = 0; i < h; i++) {
-        for (int32_t j = 0; j < w; j++) {
+void gfxRestoreTempBuffer(int x, int y, int w, int h, uint32_t *tempBuffer) {
+    for (int i = 0; i < h; i++) {
+        for (int j = 0; j < w; j++) {
             ((uint32_t *)backbuffer)[(i + y) * fbWidth + (j + x)] = tempBuffer[i * w + j];
         }
     }
 }
 
-/**
- * @brief Draws a character to the main framebuffer inside the video memory.
- *
- * @param x (int32_t) The Horizontal position of the character.
- * @param y (int32_t) The Vertical position of the character.
- * @param c (char) The character to draw.
- * @param col (uint32_t) The byte color of the character. It's best to use the
- * "gfxColor" macro for this.
- */
-void gfxDrawCharacter(int32_t x, int32_t y, char c, uint32_t col) {
+void gfxDrawCharacter(int x, int y, char c, uint32_t col) {
     uint8_t *line_addr    = backbuffer + (x * fbBPP) + (y * fbWidth * fbBPP);
     const uint16_t stride = fbWidth * fbBPP;
     const uint8_t stop_y  = MIN(fontHeight, fbHeight - y);
     const uint8_t stop_x  = MIN(fontWidth, fbWidth - x);
     if (c < 0 || c > 132) return;
 
-    for (int32_t i = 0; i < stop_y; ++i) {
+    for (int i = 0; i < stop_y; ++i) {
         uint8_t mask_table[8] = {128, 64, 32, 16, 8, 4, 2, 1};
-        for (int32_t j = 0; j < stop_x; ++j) {
+        for (int j = 0; j < stop_x; ++j) {
             if (systemFont[c][i] & mask_table[j]) ((uint32_t *)line_addr)[j] = col;
         }
         line_addr += stride;
     }
 }
 
-/**
- * @brief Draws a character to the main framebuffer inside the video memory.
- *
- * @param x (int32_t) The Horizontal position of the character.
- * @param y (int32_t) The Vertical position of the character.
- * @param col (uint32_t) The byte color of the character. It's best to use the
- * "gfxColor" macro for this.
- */
-void gfxDrawCursor(int32_t x, int32_t y, uint32_t col) {
+void gfxDrawCursor(int x, int y, uint32_t col) {
     uint8_t *line_addr    = backbuffer + (x * fbBPP) + (y * fbWidth * fbBPP);
     const uint16_t stride = fbWidth * fbBPP;
     const uint8_t stop_y  = MIN(fontHeight, fbHeight - y);
     const uint8_t stop_x  = MIN(fontWidth, fbWidth - x);
 
-    for (int32_t i = 0; i < stop_y; ++i) {
+    for (int i = 0; i < stop_y; ++i) {
         uint8_t mask_table[8] = {128, 64, 32, 16, 8, 4, 2, 1};
-        for (int32_t j = 0; j < stop_x; ++j) {
+        for (int j = 0; j < stop_x; ++j) {
             if (systemCursor[i] & mask_table[j]) ((uint32_t *)line_addr)[j] = col;
         }
         line_addr += stride;
     }
 }
 
-/**
- * @brief Clears the main framebuffer inside the video memory.
- *
- * @param col (uint32_t) The byte color to use for the clear. It's best to use
- * the "gfxColor" macro for this.
- */
 void gfxFramebufferClear(uint32_t col) {
     uint8_t *p    = backbuffer;
     uint8_t *stop = backbuffer + fbWidth * fbHeight * fbBPP;
@@ -163,15 +95,7 @@ void gfxFramebufferClear(uint32_t col) {
     }
 }
 
-/**
- * @brief Handles the scrolling of the framebuffer as well as postion and
- * drawing of characters to the display.
- *
- * @param ch (char) The character to draw.
- */
-void gfxPutCharacter(char ch)
-
-{
+void gfxPutCharacter(char ch) {
     // If the cursor is at the bottom of the screen, scroll up
     // by the height of a character
     if (cursorY + fontHeight >= fbHeight) {
@@ -196,6 +120,16 @@ void gfxFramebufferScroll(uint16_t lines) {
         *(uint32_t *)p = *(uint32_t *)(p + lines * fbWidth * fbBPP);
         p += fbBPP;
     }
+}
+
+void gfxPutStringAt(int x, int y, const char *str) {
+    cursorX = x;
+    cursorY = y;
+    while (*str) {
+        gfxPutCharacter(*str++);
+    }
+    cursorX = 0;
+    cursorY = 0;
 }
 
 void gfxPutString(const char *str) {

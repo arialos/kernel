@@ -12,9 +12,9 @@ extern uint16_t fbHeight;
 extern uint8_t fbBPP;
 extern uint16_t fbStride;
 
-static int32_t cursorPaddingX = 10;
-static int32_t cursorPaddingY = 5;
-static int32_t cursorX, cursorY;
+static int cursorPaddingX = 10;
+static int cursorPaddingY = 5;
+static int cursorX, cursorY;
 static uint32_t fgColor, bgColor;
 
 #define gfxColor(r, g, b) ((r << 16) | (g << 8) | (b << 0))
@@ -22,15 +22,16 @@ static uint32_t fgColor, bgColor;
 bool initGFX(multiboot_info_t *mbi);
 void gfxFramebufferClear(uint32_t col);
 
-void gfxSaveTempBuffer(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer);
-void gfxRestoreTempBuffer(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t *tempBuffer);
+void gfxSaveTempBuffer(int x, int y, int w, int h, uint32_t *tempBuffer);
+void gfxRestoreTempBuffer(int x, int y, int w, int h, uint32_t *tempBuffer);
 
-void gfxDrawPixel(int32_t x, int32_t y, uint32_t col);
-void gfxDrawCursor(int32_t x, int32_t y, uint32_t col);
-void gfxDrawCharacter(int32_t x, int32_t y, char c, uint32_t col);
-void gfxDrawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t col);
+void gfxDrawPixel(int x, int y, uint32_t col);
+void gfxDrawCursor(int x, int y, uint32_t col);
+void gfxDrawCharacter(int x, int y, char c, uint32_t col);
+void gfxDrawRect(int x, int y, int w, int h, uint32_t col);
 void gfxFramebufferClear(uint32_t col);
 void gfxPutString(const char *str);
+void gfxPutStringAt(int x, int y, const char *str);
 void gfxSwapBuffers(void);
 
 #endif

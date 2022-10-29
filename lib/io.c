@@ -24,8 +24,8 @@ void *memset(void *buf, int val, size_t sz) {
     return buf;
 }
 
-void *memcpy(void *dest, void *src, size_t sz) {
-    while (sz--) *(char *)dest++ = *(char *)src++;
+void *memcpy(void *dest, const void *src, size_t n) {
+    while (n--) *(char *)dest++ = *(char *)src++;
     return dest;
 }
 
