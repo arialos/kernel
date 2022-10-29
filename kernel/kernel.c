@@ -13,8 +13,8 @@
 #include "mouse.h"
 #include "multiboot.h"
 #include "paging.h"
+#include "pit.h"
 #include "smbios.h"
-#include "tty.h"
 #include "version.h"
 #include "window.h"
 
@@ -24,7 +24,7 @@ void main(multiboot_info_t *mbi, unsigned long magic) {
     enableFpu();
 
     // Initialize terminal interface
-    if (!initGFX(mbi)) initTty();
+    initGFX(mbi);
 
     printf("Welcome to the Arial Kernel!\n");
     printf("Version: %s\n", KERNEL_VERSION);
@@ -110,6 +110,9 @@ void main(multiboot_info_t *mbi, unsigned long magic) {
     initMouse();
 
     printf("\n");
+
+    printf("[ PIT ] Initializing timer...\n");
+    initTimer();
 
     initWindowManager();
 }
