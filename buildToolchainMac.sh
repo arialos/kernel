@@ -32,7 +32,7 @@ mkdir -p $HOME/src
 mkdir -p $PREFIX
 
 # gmp mpfr libmpc
-brew install gmp mpfr libmpc autoconf automake xorriso
+brew install gmp mpfr libmpc autoconf automake xorriso texinfo
 
 # binutils
 echo ""
@@ -45,12 +45,13 @@ if [ ! -d "binutils-2.38" ]; then
   tar xfz binutils-2.38.tar.gz
   
   rm binutils-2.38.tar.gz
-  mkdir -p build-binutils
-  cd build-binutils
-  ../binutils-2.38/configure --target=$TARGET --prefix="$PREFIX" --enable-interwork --enable-multilib --disable-nls --disable-werror
-  make
-  make install
 fi
+
+mkdir -p build-binutils
+cd build-binutils
+../binutils-2.38/configure --target=$TARGET --prefix="$PREFIX" --enable-interwork --enable-multilib --disable-nls --disable-werror
+make
+make install
 
 # gcc
 cd $HOME/src
@@ -60,14 +61,14 @@ if [ ! -d "gcc-11.2.0" ]; then
   tar xfz gcc-11.2.0.tar.gz
 
   rm gcc-11.2.0.tar.gz
-  mkdir -p build-gcc
-  cd build-gcc
-  ../gcc-11.2.0/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers --enable-interwork --enable-multilib  --with-gmp=/usr/local/Cellar/gmp/6.2.1_1 --with-mpfr=/usr/local/Cellar/mpfr/4.1.0 --with-mpc=/usr/local/Cellar/libmpc/1.2.1
-  make all-gcc
-  make all-target-libgcc
-  make install-gcc
-  make install-target-libgcc
 fi
+mkdir -p build-gcc
+cd build-gcc
+../gcc-11.2.0/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers --enable-interwork --enable-multilib  --with-gmp=/usr/local/Cellar/gmp/6.2.1_1 --with-mpfr=/usr/local/Cellar/mpfr/4.1.0 --with-mpc=/usr/local/Cellar/libmpc/1.2.1
+make all-gcc
+make all-target-libgcc
+make install-gcc
+make install-target-libgcc
 
 # objconv
 
