@@ -6,6 +6,7 @@
 #include "fpu.h"
 #include "gdt.h"
 #include "gfx.h"
+//
 #include "idt.h"
 #include "irq.h"
 #include "keyboard.h"
@@ -24,7 +25,7 @@ void main(multiboot_info_t *mbi, unsigned long magic) {
     enableFpu();
 
     // Initialize terminal interface
-    initGFX(mbi);
+    initGraphics(mbi);
 
     printf("Welcome to the Arial Kernel!\n");
     printf("Version: %s\n", KERNEL_VERSION);

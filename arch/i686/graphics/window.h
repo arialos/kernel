@@ -20,5 +20,9 @@ typedef struct {
     int32_t y;  // Vertical position from top-left
     uint16_t z;  // Z-index. For controlling order of redraws
 } Window;
+
+Window *wmGetWindowAt(int x, int y);
+Window *wmCreateWindow(int w, int h, char *str);
+
 void initWindowManager(void);
 #endif

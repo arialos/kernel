@@ -27,7 +27,3 @@ char *itoa(int val, int base) {
 
     return &buf[i + (neg ? 0 : 1)];
 }
-
-// int clamp( int val, int min, int max ) {
-//     return ;
-// }

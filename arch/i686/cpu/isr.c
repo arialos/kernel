@@ -1,6 +1,5 @@
 #include "isr.h"
 
-#include "gfx.h"
 #include "idt.h"
 #include "irq.h"
 #include "libio.h"

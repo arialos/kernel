@@ -17,6 +17,11 @@
   "editor.formatOnSave": true,
   "files.associations": {
     "stdint.h": "c",
-    "irq.h": "c"
+    "irq.h": "c",
+    "gfx.h": "c"
   },
+  "cSpell.words": [
+    "framebuffer",
+    "multiboot"
+  ],
 }

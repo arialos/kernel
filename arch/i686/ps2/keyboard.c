@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "gfx.h"
 #include "irq.h"
 #include "libio.h"
 #include "scancodes.h"

@@ -1,7 +1,5 @@
 #include "gdt.h"
 
-#include "gfx.h"
-
 struct GDTEntry gdt[5];
 struct GDTRegisters GDTRegister;
 
