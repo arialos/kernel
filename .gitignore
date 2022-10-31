@@ -4,6 +4,8 @@ toolchain/build
 
 .DS_Store
 
+out.txt
+
 **/*.o
 **/*.d
 arial.*

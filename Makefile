@@ -66,6 +66,6 @@ clean:
 	@rm -rf $(DESTDIR)
 
 run: clean iso
-	qemu-system-i386 -cdrom arial.iso -vga std
+	qemu-system-i386 -serial stdio -cdrom arial.iso -vga  std
 
 -include $(DEPFILES)
