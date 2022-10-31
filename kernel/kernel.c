@@ -15,6 +15,7 @@
 #include "multiboot.h"
 #include "paging.h"
 #include "pit.h"
+#include "serial.h"
 #include "smbios.h"
 #include "version.h"
 #include "window.h"
@@ -23,6 +24,7 @@
 
 void main(multiboot_info_t *mbi, unsigned long magic) {
     enableFpu();
+    initSerial();
 
     // Initialize terminal interface
     initGraphics(mbi);
