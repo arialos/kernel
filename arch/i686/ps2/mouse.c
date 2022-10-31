@@ -61,6 +61,8 @@ static void MouseInterruptHandler(struct Registers *regs) {
 
                     if (mouseY - mouseByte[2] > 0 && mouseY - mouseByte[2] < fbHeight) mouseY -= mouseByte[2];
 
+                    // printf("[ MOUSE ] X: %d, Y: %d\n", mouseX, mouseY);
+
                     // if ( mouseByte[0] & 0x01 ) {
                     //     // Test is the mouse is over a window
                     //     struct Window *window = wmGetWindowAt( mouseX, mouseY
