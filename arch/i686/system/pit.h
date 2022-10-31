@@ -7,7 +7,6 @@
 
 extern uint32_t timer_ticks;
 
-void setTimerPhase(int hz);
-void initTimer();
+int initTimer(int freq);
 
 #endif

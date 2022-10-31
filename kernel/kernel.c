@@ -115,7 +115,7 @@ void main(multiboot_info_t *mbi, unsigned long magic) {
     printf("\n");
 
     printf("[ PIT ] Initializing timer...\n");
-    initTimer();
+    initTimer(50);
 
     initWindowManager();
 }
