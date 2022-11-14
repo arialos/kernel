@@ -75,7 +75,11 @@ void gfxSwapBuffers(void) {
     fSynced = true;
 }
 
-void gfxClearBuffer(uint32_t col) { gfxDrawRect(0, 0, fbWidth, fbHeight, col); }
+void gfxClearBuffer(uint32_t col) {
+    for (int i = 0; i < fbWidth * fbHeight; i++) {
+        if (framebuffer[i] != col) framebuffer[i] = col;
+    }
+}
 
 int initGraphics(multiboot_info_t *mbi) {
     if (mbi->framebuffer_bpp != 32) return 1;

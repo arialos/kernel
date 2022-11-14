@@ -1,23 +1,24 @@
 {
-  "configurations": [
-    {
-      "name": "Arial",
-      "includePath": [
-        "${workspaceFolder}/**"
-      ],
-      "defines": [],
-      "compilerPath": "/Users/jonathanvoss/opt/bin/i686-elf-gcc",
-      "cStandard": "gnu99",
-      "compilerArgs": [
-        "-ffreestanding",
-        "-fno-stack-protector",
-        "-nostdlib",
-        "-m32",
-        " -g"
-      ],
-      "cppStandard": "gnu++98",
-      "intelliSenseMode": "gcc-x86"
-    }
-  ],
-  "version": 4
+    "configurations": [
+        {
+            "name": "Arial",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/Users/jonathanvoss/opt/bin/i686-elf-gcc",
+            "cStandard": "gnu99",
+            "compilerArgs": [
+                "-ffreestanding",
+                "-fno-stack-protector",
+                "-nostdlib",
+                "-m32",
+                " -g"
+            ],
+            "cppStandard": "gnu++98",
+            "intelliSenseMode": "gcc-x86",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
 }

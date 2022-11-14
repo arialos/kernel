@@ -118,4 +118,6 @@ void main(multiboot_info_t *mbi, unsigned long magic) {
     initTimer(50);
 
     initWindowManager();
+
+
 }

@@ -47,11 +47,11 @@ Window *wmCreateWindow(int w, int h, char *str) {
 void wmRedrawWindows() {
     gfxClearBuffer(gfxColor(0x00, 0x6E, 0x8D));
 
-    for (int i = 0; i < (sizeof(Window) / sizeof(windows[0])); i++) {
-        Window *window = windows[i];
+    // for (int i = 0; i < (sizeof(Window) / sizeof(windows[0])); i++) {
+    //     Window *window = windows[i];
 
-        gfxDrawBuffer(window->x, window->y + 20, window->w, window->h - 20, window->buffer);
-    }
+    //     gfxDrawBuffer(window->x, window->y + 20, window->w, window->h - 20, window->buffer);
+    // }
 
     // gfxDrawRect(mouseX, mouseY, 20, 20, gfxColor(0x00, 0x6E, 0xFF));
     gfxDrawLegacyBitmap(mouseX, mouseY, systemCursor, gfxColor(0xFF, 0xFF, 0xFF));
@@ -69,9 +69,8 @@ void wmRedrawWindows() {
 
 void initWindowManager(void) {
     // Create the first window
-    wmCreateWindow(200, 200, "Window 1");
+    // wmCreateWindow(200, 200, "Window 1");
     for (;;) {
-        if (!fSynced) return;
         wmRedrawWindows();
         gfxSwapBuffers();
     }
