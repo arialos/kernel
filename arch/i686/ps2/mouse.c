@@ -30,7 +30,7 @@ void mouseWait(uint8_t WaitType) {
     }
 }
 
-static void MouseInterruptHandler(struct Registers *regs) {
+static void MouseInterruptHandler(Registers *regs) {
     (void)regs;
 
     uint8_t status = inb(0x64);

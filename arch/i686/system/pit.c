@@ -8,7 +8,7 @@ uint32_t timer_ticks = 0;
 
 void setTimerPhase(int hz) {}
 
-void timerInterruptHandler(struct Registers *regs) {
+void timerInterruptHandler(Registers *regs) {
     (void)regs;
     // Increment our 'tick count'
     timer_ticks++;

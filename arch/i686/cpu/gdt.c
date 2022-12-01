@@ -1,7 +1,7 @@
 #include "gdt.h"
 
-struct GDTEntry gdt[5];
-struct GDTRegisters GDTRegister;
+GDTEntry gdt[5];
+GDTRegisters GDTRegister;
 
 extern void gdtFlush(uint32_t);
 

@@ -3,18 +3,18 @@
 
 #include <stdint.h>
 
-struct IDTEntry {
+typedef struct IDTEntry {
     uint16_t low;
     uint16_t sel;
     uint8_t zero;
     uint8_t flags;
     uint16_t high;
-} __attribute__((packed));
+} __attribute__((packed)) IDTEntry;
 
-struct IDTRegisters {
+typedef struct IDTRegisters {
     uint16_t limit;
     uint32_t base;
-} __attribute__((packed));
+} __attribute__((packed)) IDTRegisters;
 
 extern void idtFlush(uint32_t);
 

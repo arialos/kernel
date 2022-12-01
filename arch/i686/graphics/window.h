@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef struct {
+typedef struct Window {
     // Window properties
     uint16_t id;  // Window ID
     uint8_t *buffer;  // Framebuffer for the window

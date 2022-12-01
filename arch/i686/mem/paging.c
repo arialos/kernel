@@ -13,7 +13,7 @@
 
 uint32_t *current_directory;
 
-static void pageFault(struct Registers *regs) {
+static void pageFault(Registers *regs) {
     (void)regs;
 
     volatile uint32_t fault_addr;

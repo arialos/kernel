@@ -16,7 +16,6 @@ extern uint8_t fbBPP;
 
 inline void gfxDrawPixel(int x, int y, uint32_t col);
 inline void gfxDrawHLine(int x, int y, int w, uint32_t col);
-inline void gfxDrawVLine(int x, int y, int h, uint32_t col);
 
 void gfxDrawRect(int x, int y, int w, int h, uint32_t col);
 void gfxDrawLine(int x1, int y1, int x2, int y2, uint32_t col);
@@ -26,6 +25,6 @@ void gfxDrawBuffer(int x, int y, int w, int h, uint32_t *buffer);
 void gfxSwapBuffers(void);
 void gfxClearBuffer(uint32_t col);
 
-int initGraphics(multiboot_info_t *mbi);
+int initGraphics(MultibootInfo *mbi);
 
 #endif

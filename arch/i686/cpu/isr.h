@@ -36,15 +36,15 @@ extern void _isr29(void);
 extern void _isr30(void);
 extern void _isr31(void);
 
-struct Registers {
+typedef struct Registers {
     uint32_t gs, fs, es, ds;
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
     uint32_t id, error;
     uint32_t eip, cs, eflags, useresp, ss;
-} __attribute__((packed));
+} __attribute__((packed)) Registers;
 
 void isrInit();
-void isrInstallHandler(int32_t isr, void (*handler)(struct Registers *regs));
-void isrHandler(struct Registers *regs);
+void isrInstallHandler(int32_t isr, void (*handler)(Registers *regs));
+void isrHandler(Registers *regs);
 
 #endif  // ISR_H_INCLUDED

@@ -24,8 +24,8 @@ extern void _irq15(void);
 extern void _int0x80(void);
 
 void irqInit();
-void irqInstallHandler(int32_t irq, void (*handler)(struct Registers *regs));
+void irqInstallHandler(int32_t irq, void (*handler)(Registers *regs));
 void irqUninstallHandler(int32_t irq);
-void irqHandler(struct Registers *regs);
+void irqHandler(Registers *regs);
 
 #endif  // IRQ_H_INCLUDED

@@ -81,7 +81,7 @@ void gfxClearBuffer(uint32_t col) {
     }
 }
 
-int initGraphics(multiboot_info_t *mbi) {
+int initGraphics(MultibootInfo *mbi) {
     if (mbi->framebuffer_bpp != 32) return 1;
 
     fbWidth  = mbi->framebuffer_width;

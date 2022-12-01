@@ -22,7 +22,7 @@
 
 #define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
 
-void main(multiboot_info_t *mbi, unsigned long magic) {
+void main(MultibootInfo *mbi, unsigned long magic) {
     enableFpu();
     initSerial();
 
@@ -118,6 +118,4 @@ void main(multiboot_info_t *mbi, unsigned long magic) {
     initTimer(50);
 
     initWindowManager();
-
-
 }

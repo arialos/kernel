@@ -79,11 +79,11 @@ void *isrRoutines[32] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-void isrInstallHandler(int32_t isr, void (*handler)(struct Registers *regs)) { isrRoutines[isr] = handler; }
+void isrInstallHandler(int32_t isr, void (*handler)(Registers *regs)) { isrRoutines[isr] = handler; }
 
-void isrHandler(struct Registers *regs) {
+void isrHandler(Registers *regs) {
     if (isrRoutines[regs->id] != 0) {
-        void (*handler)(struct Registers * regs) = isrRoutines[regs->id];
+        void (*handler)(Registers * regs) = isrRoutines[regs->id];
         handler(regs);
     } else {
         printf("Unhandled Interrupt: %d", regs->id);

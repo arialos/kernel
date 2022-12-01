@@ -14,7 +14,7 @@ bool keyboardShift    = false;
 //     printf( "%c", event->key );
 // }
 
-static void keyboardInterruptHandler(struct Registers *regs) {
+static void keyboardInterruptHandler(Registers *regs) {
     (void)regs;
 
     uint8_t scancode = inb(0x60);

@@ -4,7 +4,7 @@
 #include "isr.h"
 #include "libio.h"
 
-extern void *interrupt_handlers[256];
+// extern void *interrupt_handlers[256];
 
 // Remap the PIC to prepare for the new interrupt handlers
 void irqRemap() {
@@ -43,15 +43,15 @@ void irqInit() {
 
 void *irqRoutines[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-void irqInstallHandler(int32_t irq, void (*handler)(struct Registers *regs)) {
+void irqInstallHandler(int32_t irq, void (*handler)(Registers *regs)) {
     printf("[ IRQ ] Installing handler for IRQ %d\n", irq);
     irqRoutines[irq] = handler;
 }
 
 void irqUninstallHandler(int32_t irq) { irqRoutines[irq] = 0; }
 
-void irqHandler(struct Registers *regs) {
-    void (*handler)(struct Registers * reg);
+void irqHandler(Registers *regs) {
+    void (*handler)(Registers * reg);
     handler = irqRoutines[regs->id - 32];
 
     if (handler) {
