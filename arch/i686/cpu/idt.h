@@ -18,7 +18,7 @@ typedef struct IDTRegisters {
 
 extern void idtFlush(uint32_t);
 
-void idtInit();
 void setIDT(uint8_t idx, uint32_t base, uint16_t sel, uint8_t flags);
+int idtInit();
 
 #endif  // IDT_H_INCLUDED

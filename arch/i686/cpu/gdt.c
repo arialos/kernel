@@ -20,7 +20,7 @@ void setGDT(int num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran
     gdt[num].access = access;
 }
 
-void gdtInit() {
+int gdtInit(void) {
     setGDT(0, 0, 0, 0, 0);
     setGDT(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
     setGDT(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
@@ -47,4 +47,6 @@ void gdtInit() {
 
     printf("[ GDT ] Registers limit: 0x%x : 0x%x\n", GDTRegister.limit, sizeof(gdt) * 3 - 1);
     printf("[ GDT ] Registers base:  0x%x : 0x%x\n\n", GDTRegister.base, (uint32_t)&gdt);
+
+    return 0;
 }

@@ -23,7 +23,7 @@ static void *kmallocInt(size_t sz, int align, void **phys) {
     void *ret = (void *)kmalloc_addr;
     kmalloc_addr += sz;
     /* make sure the address is aligned if requested */
-    assert(!align || (((uint32_t)ret & 0xFFF) == 0));
+    ASSERT(!align || (((uint32_t)ret & 0xFFF) == 0));
     return ret;
 }
 

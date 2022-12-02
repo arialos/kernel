@@ -1,6 +1,6 @@
 #include <stdbool.h>
 
-bool initSMBios(void) {
+int initSMBios(void) {
     char *mem = (unsigned char *)0xF0000;
     int length, i;
     unsigned char checksum;
@@ -16,7 +16,7 @@ bool initSMBios(void) {
         mem += 16;
     }
     if ((unsigned int)mem == 0x100000) {
-        return false;
+        return 1;
     }
-    return true;
+    return 0;
 }

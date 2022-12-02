@@ -14,11 +14,13 @@ void setIDT(uint8_t idx, uint32_t base, uint16_t sel, uint8_t flags) {
     idt[idx].flags = flags;
 }
 
-void idtInit() {
+int idtInit(void) {
     IDTRegister.limit = (sizeof(IDTEntry) * 256) - 1;
     IDTRegister.base  = &idt;
 
     memset(&idt, 0, sizeof(IDTEntry) * 256);
 
     idtFlush(&IDTRegister);
+
+    return 0;
 }

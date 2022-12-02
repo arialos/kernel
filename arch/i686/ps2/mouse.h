@@ -5,6 +5,6 @@
 #include <stdint.h>
 
 extern uint32_t mouseX, mouseY;
-bool initMouse(void);
+int initMouse(void);
 
 #endif

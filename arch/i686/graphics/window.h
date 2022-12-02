@@ -24,5 +24,5 @@ typedef struct Window {
 Window *wmGetWindowAt(int x, int y);
 Window *wmCreateWindow(int w, int h, char *str);
 
-void initWindowManager(void);
+int initWindowManager(void);
 #endif

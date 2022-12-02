@@ -44,7 +44,7 @@ static uint32_t *identityMapTable(uint32_t start, int flags) {
     return table;
 }
 
-void initPaging(void) {
+int initPaging(void) {
     uint32_t *kernel_directory = kmallocA(0x1000);
     memset(kernel_directory, 0, 0x1000);
     /* blank the kernel directory */
@@ -60,4 +60,6 @@ void initPaging(void) {
     irqInstallHandler(14, pageFault);
 
     pagingSwitchDirectory(kernel_directory);
+
+    return 0;
 }

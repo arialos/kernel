@@ -8,6 +8,6 @@
 #define PAGE_MASK 0xFFFFF000
 #define PAGE_SIZE 0x1000
 
-void initPaging(void);
+int initPaging(void);
 
 #endif

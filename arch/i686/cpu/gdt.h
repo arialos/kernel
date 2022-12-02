@@ -17,6 +17,6 @@ typedef struct GDTRegisters {
     uint32_t base;
 } __attribute__((packed)) GDTRegisters;
 
-void gdtInit();
+int gdtInit();
 
 #endif  // GDT_H_INCLUDED

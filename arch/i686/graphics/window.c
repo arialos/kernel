@@ -67,11 +67,13 @@ void wmRedrawWindows() {
     frames++;
 }
 
-void initWindowManager(void) {
+int initWindowManager(void) {
     // Create the first window
     // wmCreateWindow(200, 200, "Window 1");
     for (;;) {
         wmRedrawWindows();
         gfxSwapBuffers();
     }
+
+    return 0;
 }

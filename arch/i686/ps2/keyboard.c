@@ -47,7 +47,7 @@ static void keyboardInterruptHandler(Registers *regs) {
     // printf( "%c", setOneBase[1][scancode] );
 }
 
-bool initKeyboard(void) {
+int initKeyboard(void) {
     irqInstallHandler(1, keyboardInterruptHandler);
 
     printf("[ KEYBOARD ] Driver registered successfully at: 0x%x\n", keyboardInterruptHandler);
@@ -65,5 +65,5 @@ bool initKeyboard(void) {
     printf("Status: %x ", status);
 
     printf("Success!\n");
-    return true;
+    return 0;
 }

@@ -43,8 +43,8 @@ typedef struct Registers {
     uint32_t eip, cs, eflags, useresp, ss;
 } __attribute__((packed)) Registers;
 
-void isrInit();
 void isrInstallHandler(int32_t isr, void (*handler)(Registers *regs));
 void isrHandler(Registers *regs);
+int isrInit();
 
 #endif  // ISR_H_INCLUDED

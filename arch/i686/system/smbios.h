@@ -3,6 +3,6 @@
 
 #include <stdbool.h>
 
-bool initSMBios(void);
+int initSMBios(void);
 
 #endif  // SMBIOS_H_INCLUDED

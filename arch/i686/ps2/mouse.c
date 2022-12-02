@@ -83,7 +83,7 @@ static void MouseInterruptHandler(Registers *regs) {
     }
 }
 
-bool initMouse(void) {
+int initMouse(void) {
     uint8_t status;
 
     printf("[ MOUSE ] Enabling second PS/2 Port\n");
@@ -114,7 +114,7 @@ bool initMouse(void) {
     printf("[ MOUSE ] Setting defaults... ");
     if (inb(0x60) != 0xFA) {
         printf("[ MOUSE ] Failed to set defaults!\n");
-        return false;
+        return 1;
     } else {
         printf("Success!\n");
     }
@@ -130,7 +130,7 @@ bool initMouse(void) {
     printf("[ MOUSE ] Enabling the mouse... ");
     if (inb(0x60) != 0xFA) {
         printf("[ MOUSE ] Failed to set enable the mouse!\n");
-        return false;
+        return 1;
     } else {
         printf("Success!\n");
     }
@@ -139,5 +139,5 @@ bool initMouse(void) {
 
     printf("[ MOUSE ] Driver registered successfully at: 0x%x\n", MouseInterruptHandler);
 
-    return true;
+    return 0;
 }
