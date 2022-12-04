@@ -11,73 +11,71 @@
 #include "multiboot.h"
 
 uint32_t *video_memory = NULL;
-uint32_t *framebuffer  = NULL;
+gfxBuffer framebuffer;
 
 bool fSynced = true;
 
 uint16_t fbWidth, fbHeight, fbStride;
 uint8_t fbBPP;
 
-inline void gfxDrawPixel(int x, int y, uint32_t col) { ((uint32_t *)framebuffer)[y * fbWidth + x] = col; }
+inline void gfxDrawPixel(int x, int y, gfxBuffer buffer, uint32_t col) {
+    ((uint32_t *)buffer.buffer)[y * buffer.width + x] = col;
+}
 
-inline void gfxDrawHLine(int x, int y, int w, uint32_t col) {
+inline void gfxDrawHLine(int x, int y, int w, gfxBuffer buffer, uint32_t col) {
     for (int i = 0; i < w; i++) {
-        ((uint32_t *)framebuffer)[y * fbWidth + x + i] = col;
+        ((uint32_t *)buffer.buffer)[y * buffer.width + x + i] = col;
     }
 }
-inline void gfxDrawVLine(int x, int y, int h, uint32_t col) {
+inline void gfxDrawVLine(int x, int y, int h, gfxBuffer buffer, uint32_t col) {
     for (int i = 0; i < h; i++) {
-        ((uint32_t *)framebuffer)[(y + i) * fbWidth + x] = col;
+        ((uint32_t *)buffer.buffer)[(y + i) * buffer.width + x] = col;
     }
 }
-void gfxDrawLine(int x1, int y1, int x2, int y2, uint32_t col) {}
+void gfxDrawLine(int x1, int y1, int x2, int y2, gfxBuffer buffer, uint32_t col) {}
 
-void gfxDrawRect(int x, int y, int w, int h, uint32_t col) {
-    uint32_t *where = &framebuffer[x + y * fbWidth];
+void gfxDrawRect(int x, int y, int w, int h, gfxBuffer buffer, uint32_t col) {
+    uint32_t *where = &buffer.buffer[x + y * buffer.width];
 
-    for (int i = 0; i < MIN(fbHeight - y, h); i++) {
-        for (int j = 0; j < MIN(fbWidth - x, w); j++) {
+    for (int i = 0; i < MIN(buffer.height - y, h); i++) {
+        for (int j = 0; j < MIN(buffer.width - x, w); j++) {
             *where++ = col;
         }
-        where += fbWidth - MIN(fbWidth - x, w);
+        where += buffer.width - MIN(buffer.width - x, w);
     }
 }
 
-void gfxDrawLegacyBitmap(int x, int y, uint8_t bitmap[], uint32_t col) {
-    uint32_t *where = &framebuffer[x + y * fbWidth];
+void gfxDrawLegacyBitmap(int x, int y, uint8_t *bitmap, gfxBuffer buffer, uint32_t col) {
+    uint32_t *where = &buffer.buffer[x + y * buffer.width];
 
-    for (int i = 0; i < MIN(fbHeight - y, fontHeight); ++i) {
-        for (int j = 0; j < MIN(fbWidth - x, fontWidth); ++j) {
+    for (int i = 0; i < MIN(buffer.height - y, fontHeight); ++i) {
+        for (int j = 0; j < MIN(buffer.width - x, fontWidth); ++j) {
             *where++ = bitmap[i] & maskTable[j] ? col : *where;
         }
-        where += fbWidth - MIN(fbWidth - x, fontWidth);
+        where += buffer.width - MIN(buffer.width - x, fontWidth);
     }
 }
 
-void gfxDrawBuffer(int x, int y, int w, int h, uint32_t *buffer) {
-    uint32_t *where = &framebuffer[x + y * fbWidth];
-
-    for (int i = 0; i < MIN(fbHeight - y, h); i++) {
-        for (int j = 0; j < MIN(fbWidth - x, w); j++) {
-            *where++ = *buffer++;
-        }
-        where += fbWidth - MIN(fbWidth - x, w);
+void gfxPutString(int x, int y, char *str, gfxBuffer buffer, uint32_t col) {
+    while (*str) {
+        gfxDrawLegacyBitmap(x, y, fontData[*str++], buffer, col);
+        x += fontWidth;
     }
 }
 
 void gfxSwapBuffers(void) {
     fSynced = false;
-    for (int i = 0; i < fbWidth * fbHeight; i++) {
-        if (framebuffer[i] != video_memory[i]) {
-            video_memory[i] = framebuffer[i];
+    for (int i = 0; i < framebuffer.width * framebuffer.height; i++) {
+        if (framebuffer.buffer[i] != video_memory[i]) {
+            video_memory[i] = framebuffer.buffer[i];
         }
     }
     fSynced = true;
 }
 
-void gfxClearBuffer(uint32_t col) {
-    for (int i = 0; i < fbWidth * fbHeight; i++) {
-        if (framebuffer[i] != col) framebuffer[i] = col;
+void gfxClearBuffer(gfxBuffer buffer, uint32_t col) {
+    for (int i = 0; i < buffer.width * buffer.height; i++) {
+        if (buffer.buffer[i] != col) buffer.buffer[i] = col;
     }
 }
 
@@ -90,10 +88,10 @@ int initGraphics(MultibootInfo *mbi) {
     fbStride = mbi->framebuffer_pitch;
 
     video_memory = (uint8_t *)mbi->framebuffer_addr;
-    framebuffer  = kmalloc(fbHeight * fbStride);
 
-    // gfxClearBuffer(gfxColor(0x00, 0x00, 0xFF));
-    // gfxSwapBuffers();
+    framebuffer.buffer = kmalloc(fbHeight * fbStride);
+    framebuffer.height = fbHeight;
+    framebuffer.width  = fbWidth;
 
     return 0;
 }
