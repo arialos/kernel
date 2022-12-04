@@ -22,6 +22,7 @@
   },
   "cSpell.words": [
     "framebuffer",
+    "kmalloc",
     "multiboot"
   ],
 }

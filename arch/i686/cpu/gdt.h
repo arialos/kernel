@@ -5,11 +5,11 @@
 
 typedef struct GDTEntry {
     uint16_t limit;
-    uint16_t baseLow;
-    uint8_t baseMid;
+    uint16_t base_low;
+    uint8_t base_mid;
     uint8_t access;
     uint8_t granularity;
-    uint8_t baseHigh;
+    uint8_t base_high;
 } __attribute__((packed)) GDTEntry;
 
 typedef struct GDTRegisters {
