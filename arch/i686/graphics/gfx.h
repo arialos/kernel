@@ -29,6 +29,7 @@ void gfxDrawRect(int x, int y, int w, int h, gfxBuffer buffer, uint32_t col);
 void gfxDrawLine(int x1, int y1, int x2, int y2, gfxBuffer buffer, uint32_t col);
 
 void gfxDrawLegacyBitmap(int x, int y, uint8_t *bitmap, gfxBuffer buffer, uint32_t col);
+void gfxDrawString(int x, int y, char *str, gfxBuffer buffer, uint32_t col);
 
 void gfxDrawBuffer(int x, int y, gfxBuffer src, gfxBuffer dest);
 void gfxSwapBuffers(void);

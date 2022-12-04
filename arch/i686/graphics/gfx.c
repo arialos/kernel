@@ -56,10 +56,40 @@ void gfxDrawLegacyBitmap(int x, int y, uint8_t *bitmap, gfxBuffer buffer, uint32
     }
 }
 
-void gfxPutString(int x, int y, char *str, gfxBuffer buffer, uint32_t col) {
+int cursor_x, cursor_y;
+
+void gfxDrawCharacter(int x, int y, char ch, gfxBuffer buffer, uint32_t col) {
+    // If the cursor is at the bottom of the screen, scroll up
+    // by the height of a character
+    if (cursor_y + fontHeight >= fbHeight) cursor_y = y;
+
+    if (ch == '\n' || cursor_x + fontWidth >= buffer.width) {
+        cursor_x = x;
+        cursor_y += fontHeight;
+        return;
+    }
+
+    gfxDrawLegacyBitmap(cursor_x, cursor_y, systemFont[ch], buffer, col);
+    cursor_x += fontWidth;
+}
+
+void gfxDrawString(int x, int y, char *str, gfxBuffer buffer, uint32_t col) {
+    cursor_x = x;
+    cursor_y = y;
+
     while (*str) {
-        gfxDrawLegacyBitmap(x, y, fontData[*str++], buffer, col);
-        x += fontWidth;
+        gfxDrawCharacter(x, y, *str++, buffer, col);
+    }
+}
+
+void gfxDrawBuffer(int x, int y, gfxBuffer src, gfxBuffer dest) {
+    uint32_t *where = &dest.buffer[x + y * dest.width];
+
+    for (int i = 0; i < MIN(dest.height - y, src.height); i++) {
+        for (int j = 0; j < MIN(dest.width - x, src.width); j++) {
+            *where++ = src.buffer[i * src.width + j];
+        }
+        where += dest.width - MIN(dest.width - x, src.width);
     }
 }
 

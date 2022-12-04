@@ -6,11 +6,12 @@
 #include "fpu.h"
 #include "gdt.h"
 #include "gfx.h"
-//
 #include "idt.h"
 #include "irq.h"
 #include "keyboard.h"
 #include "libio.h"
+#include "libmath.h"
+#include "libstring.h"
 #include "mouse.h"
 #include "multiboot.h"
 #include "paging.h"
@@ -18,7 +19,6 @@
 #include "serial.h"
 #include "smbios.h"
 #include "version.h"
-#include "window.h"
 
 #define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
 
@@ -117,5 +117,31 @@ void main(MultibootInfo *mbi, unsigned long magic) {
     printf("[ PIT ] Initializing timer...\n");
     initTimer(50);
 
-    initWindowManager();
+    gfxBuffer shell_buffer;
+
+    shell_buffer.width  = 800;
+    shell_buffer.height = 600;
+    shell_buffer.buffer = kmalloc(shell_buffer.width * shell_buffer.height * fbBPP);
+
+    // Draw a window inside the shell buffer
+    gfxDrawRect(0, 0, shell_buffer.width, shell_buffer.height, shell_buffer, gfxColorHex(0x000000));
+    gfxDrawRect(1, 1, framebuffer.width - 2, framebuffer.height - 2, shell_buffer, gfxColorHex(0xededed));
+
+    gfxDrawRect(1, 0, framebuffer.width - 2, 20, shell_buffer, gfxColorHex(0xd8d8e3));
+    gfxDrawRect(1, 0, framebuffer.width - 2, 1, shell_buffer, gfxColorHex(0x000000));
+
+    gfxDrawRect(1, 21, framebuffer.width - 2, 1, shell_buffer, gfxColorHex(0x000000));
+
+    gfxDrawString(5, 5, "Arial Shell", shell_buffer, gfxColorHex(0x000000));
+
+    gfxDrawString(5, 26, "Arial Shell\nHello.\n TEst.", shell_buffer, gfxColorHex(0x000000));
+    for (;;) {
+        gfxClearBuffer(framebuffer, gfxColorHex(0x4d52e3));
+
+        gfxDrawBuffer(CTP(framebuffer.width, shell_buffer.width),
+                      CTP(framebuffer.height, shell_buffer.height), shell_buffer, framebuffer);
+
+        gfxDrawLegacyBitmap(mouseX, mouseY, systemCursor, framebuffer, gfxColorHex(0xffffff));
+        gfxSwapBuffers();
+    }
 }

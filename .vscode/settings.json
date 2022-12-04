@@ -18,7 +18,8 @@
   "files.associations": {
     "stdint.h": "c",
     "irq.h": "c",
-    "gfx.h": "c"
+    "gfx.h": "c",
+    "pit.h": "c"
   },
   "cSpell.words": [
     "framebuffer",

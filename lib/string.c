@@ -19,6 +19,8 @@ static void printHex(unsigned int n) {
     }
 }
 
+char *stringBuffer = "";
+
 int printf(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -29,28 +31,40 @@ int printf(const char *fmt, ...) {
                 switch (*fmt++) {
                     case 'c':
                         writeSerial(va_arg(ap, int));
+                        stringBuffer += va_arg(ap, int);
                         // gfxPutCharacter(va_arg(ap, int));
                         break;
                     case 's':  // string
                         // Loop over ap and print each character
                         for (char *s = va_arg(ap, char *); *s; s++) {
                             writeSerial(*s);
+                            stringBuffer += *s;
                             // gfxPutCharacter(*s);
                         }
                         // gfxPutString(va_arg(ap, const char *));
                         break;
                     case 'x':  // Hex
-                        printHex(va_arg(ap, unsigned));
+                        unsigned mask  = 0xF0000000;
+                        unsigned shift = 28;
+                        while (mask) {
+                            writeSerial(hex_table[(va_arg(ap, unsigned) & mask) >> shift]);
+                            stringBuffer += hex_table[(va_arg(ap, unsigned) & mask) >> shift];
+
+                            mask >>= 4;
+                            shift -= 4;
+                        }
                         break;
                     case 'd':  // Int
                         for (char *s = itoa(va_arg(ap, int), 10); *s; s++) {
                             writeSerial(*s);
+                            stringBuffer += *s;
                             // gfxPutCharacter(*s);
                         }
                         break;
                     default:
                         for (char *s = va_arg(ap, char *); *s; s++) {
                             writeSerial(*s);
+                            stringBuffer += *s;
                             // gfxPutCharacter(*s);
                         }
                         break;
@@ -59,6 +73,7 @@ int printf(const char *fmt, ...) {
             }
             default:
                 writeSerial(ch);
+                stringBuffer += ch;
                 // gfxPutCharacter(ch);
                 break;
         }
