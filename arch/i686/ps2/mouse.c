@@ -33,53 +33,44 @@ void mouseWait(uint8_t WaitType) {
 static void MouseInterruptHandler(Registers *regs) {
     (void)regs;
 
+    // Read the status register
     uint8_t status = inb(0x64);
-    while (status & 0x01) {
-        uint8_t mouseData = inb(0x60);
-        if (status & 0x20) {
-            switch (mousePacketCycle) {
-                case 0:
-                    mouseByte[0] = mouseData;
-                    if (!(mouseData & 0x08)) return;
-                    mousePacketCycle++;
-                    break;
-                case 1:
-                    mouseByte[1] = mouseData;
-                    mousePacketCycle++;
-                    break;
-                case 2:
-                    mouseByte[2] = mouseData;
-                    // Handle an overflow of mouse data
-                    if (mouseByte[0] & 0x80 || mouseByte[0] & 0x40) return;
 
-                    mousePacketCycle = 0;
+    // Check if there is data available from the mouse
+    if (status & 0x01) {
+        // Loop through all available bytes from the mouse data port
+        while (status & 0x01) {
+            uint8_t mouseData = inb(0x60);
+            if (status & 0x20) {
+                switch (mousePacketCycle) {
+                    case 0:
+                        mouseByte[0] = mouseData;
+                        if (!(mouseData & 0x08)) return;
+                        mousePacketCycle++;
+                        break;
+                    case 1:
+                        mouseByte[1] = mouseData;
+                        mousePacketCycle++;
+                        break;
+                    case 2:
+                        mouseByte[2] = mouseData;
+                        // Handle an overflow of mouse data
+                        if (mouseByte[0] & 0x80 || mouseByte[0] & 0x40) return;
 
-                    // If the cursorBuffer is empty then don't restore the temp
-                    // buffer
+                        mousePacketCycle = 0;
 
-                    if (mouseX + mouseByte[1] > 0 && mouseX + mouseByte[1] < fbWidth) mouseX += mouseByte[1];
+                        if (mouseX + mouseByte[1] > 0 && mouseX + mouseByte[1] < fbWidth)
+                            mouseX += mouseByte[1];
 
-                    if (mouseY - mouseByte[2] > 0 && mouseY - mouseByte[2] < fbHeight) mouseY -= mouseByte[2];
+                        if (mouseY - mouseByte[2] > 0 && mouseY - mouseByte[2] < fbHeight)
+                            mouseY -= mouseByte[2];
 
-                    // printf("[ MOUSE ] X: %d, Y: %d\n", mouseX, mouseY);
-
-                    // if ( mouseByte[0] & 0x01 ) {
-                    //     // Test is the mouse is over a window
-                    //     struct Window *window = wmGetWindowAt( mouseX, mouseY
-                    //     ); if ( window != NULL ) {
-                    //         // printf( "[ MOUSE ] Window %d clicked!\n",
-                    //         // window->id );
-                    //         wmRedrawWindow( window, mouseX, mouseY );
-                    //     }
-                    // }
-
-                    // if ( mouseByte[0] & 0x02 )
-                    //     gfxDrawCursor( mouseX, mouseY, 0xFF0000 );
-
-                    break;
+                        break;
+                }
             }
+            // Read the next byte from the mouse data port
+            status = inb(0x64);
         }
-        status = inb(0x64);
     }
 }
 

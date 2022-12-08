@@ -14,6 +14,9 @@ bool keyboardShift    = false;
 //     printf( "%c", event->key );
 // }
 
+// Keep a string of all the keys that are currently pressed
+char *pressed_keys = "";
+
 static void keyboardInterruptHandler(Registers *regs) {
     (void)regs;
 
@@ -37,7 +40,7 @@ static void keyboardInterruptHandler(Registers *regs) {
         // Handle all other keys
         default:
             if (scancode & 0x80) return;
-            printf("%c", setOneBase[(keyboardShift) ? 1 : (keyboardCapsLock) ? 2 : 0][scancode]);
+            pressed_keys = setOneBase[(keyboardShift) ? 1 : (keyboardCapsLock) ? 2 : 0][scancode];
             break;
     }
 

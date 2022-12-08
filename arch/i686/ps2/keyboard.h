@@ -6,7 +6,9 @@
 
 #include "isr.h"
 
-static void keyboardHandler(Registers *regs);
+extern char* pressed_keys;
+
+static void keyboardHandler(Registers* regs);
 int initKeyboard(void);
 
 #endif
