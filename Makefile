@@ -36,7 +36,7 @@ arial.elf: version.h $(OBJFILES) linker.ld
     
 
 version.h: 
-	@echo "#define KERNEL_VERSION \"0.1.4.`date +%Y%m%d%H%M%S`\"" > $(VERSIONFILE)
+	@echo "#define KERNEL_VERSION \"0.2.0.`date +%Y%m%d%H%M%S`\"" > $(VERSIONFILE)
 	@echo "#define KERNEL_CODENAME \"Palo Alto\"" >> $(VERSIONFILE)
 	@echo "#define KERNEL_BUILD_DATE \"`date +%Y-%m-%d`\"" >> $(VERSIONFILE)
 	@echo "#define KERNEL_BUILD_TIME \"`date +%H:%M:%S`\"" >> $(VERSIONFILE)

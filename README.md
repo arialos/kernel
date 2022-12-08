@@ -37,13 +37,13 @@ Whilst Milestone 1 is far away this serves a nice goal post before i tackle more
     - [x] Get basic mouse driver working and draw cursor to screen.
     - [x] Handle clicks / modifier keys and store that information in event
     - [x] Key stroke buffer for keyboard
-- [ ] General house keeping 
-    - [ ] Get a system timer created. Create a clock from interrupt 33 or something?
+- [x] General house keeping 
+    - [x] Get a system timer created. Create a clock from interrupt 33 or something?
     - [x] Create function to find the SMBios.
-    - [ ] Use SMBios to get information about cpu, bios and manufacture of machine.
-    - [ ] Pull current world Date/Time from CMOS. 
+    - [x] Use SMBios to get information about cpu, bios and manufacture of machine.
 
 ## Screenshots
+
 <p align="center">
 <img src="https://cdn.discordapp.com/attachments/811364311795630130/1028977281948983316/Screen_Shot_2022-10-10_at_23.26.06.png" />
 <br>

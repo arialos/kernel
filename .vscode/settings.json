@@ -19,7 +19,8 @@
     "stdint.h": "c",
     "irq.h": "c",
     "gfx.h": "c",
-    "pit.h": "c"
+    "pit.h": "c",
+    "stdbool.h": "c"
   },
   "cSpell.words": [
     "framebuffer",
