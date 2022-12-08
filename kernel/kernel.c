@@ -16,15 +16,18 @@
 #include "multiboot.h"
 #include "paging.h"
 #include "pit.h"
+#include "process.h"
 #include "serial.h"
 #include "smbios.h"
 #include "version.h"
 
 #define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
 
-void main(MultibootInfo *mbi, unsigned long magic) {
+void main(MultibootInfo* mbi, unsigned long magic) {
     enableFpu();
     initSerial();
+
+    initHeap(mbi);
 
     // Initialize terminal interface
     initGraphics(mbi);
@@ -115,7 +118,16 @@ void main(MultibootInfo *mbi, unsigned long magic) {
     printf("\n");
 
     printf("[ PIT ] Initializing timer...\n");
-    initTimer(50);
+    initTimer(1000);
+
+    printf("[ PROCESSES ] Initializing the process manager... \n");
+    // initProcessManager();
+
+    // createProcess(task_1, kernel_process.regs.eflags, (uint32_t*)kernel_process.regs.cr3);
+
+    // yield();
+
+    printf("Hello World!\n");
 
     gfxBuffer shell_buffer;
 
@@ -134,9 +146,12 @@ void main(MultibootInfo *mbi, unsigned long magic) {
 
     gfxDrawString(5, 5, "Arial Shell", shell_buffer, gfxColorHex(0x000000));
 
-    gfxDrawString(5, 26, "Arial Shell\nHello.\n TEst.", shell_buffer, gfxColorHex(0x000000));
     for (;;) {
         gfxClearBuffer(framebuffer, gfxColorHex(0x4d52e3));
+
+        gfxDrawRect(1, 22, framebuffer.width - 2, framebuffer.height - 22, shell_buffer,
+                    gfxColorHex(0xededed));
+        gfxDrawString(5, 26, pressed_keys, shell_buffer, gfxColorHex(0x000000));
 
         gfxDrawBuffer(CTP(framebuffer.width, shell_buffer.width),
                       CTP(framebuffer.height, shell_buffer.height), shell_buffer, framebuffer);

@@ -25,7 +25,31 @@ void *memset(void *buf, int val, size_t sz) {
 }
 
 void *memcpy(void *dest, const void *src, size_t n) {
-    while (n--) *(char *)dest++ = *(char *)src++;
+    // Cast the destination and source pointers to uint32_t *
+    uint32_t *d       = (uint32_t *)dest;
+    const uint32_t *s = (const uint32_t *)src;
+
+    // Copy data in blocks of 16 bytes (4 words)
+    while (n >= 16) {
+        // Unroll the inner loop
+        *d++ = *s++;
+        *d++ = *s++;
+        *d++ = *s++;
+        *d++ = *s++;
+        n -= 16;
+    }
+
+    // Copy any remaining words individually
+    while (n >= 4) {
+        *d++ = *s++;
+        n -= 4;
+    }
+
+    // Copy any remaining bytes individually
+    char *d2       = (char *)d;
+    const char *s2 = (const char *)s;
+    while (n--) *d2++ = *s2++;
+
     return dest;
 }
 

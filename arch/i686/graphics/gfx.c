@@ -37,22 +37,29 @@ void gfxDrawLine(int x1, int y1, int x2, int y2, gfxBuffer buffer, uint32_t col)
 void gfxDrawRect(int x, int y, int w, int h, gfxBuffer buffer, uint32_t col) {
     uint32_t *where = &buffer.buffer[x + y * buffer.width];
 
-    for (int i = 0; i < MIN(buffer.height - y, h); i++) {
-        for (int j = 0; j < MIN(buffer.width - x, w); j++) {
+    int x_limit = MIN(buffer.width - x, w);
+    int y_limit = MIN(buffer.height - y, h);
+
+    for (int i = 0; i < y_limit; i++) {
+        for (int j = 0; j < x_limit; j++) {
             *where++ = col;
         }
-        where += buffer.width - MIN(buffer.width - x, w);
+        where += buffer.width - x_limit;
     }
 }
 
 void gfxDrawLegacyBitmap(int x, int y, uint8_t *bitmap, gfxBuffer buffer, uint32_t col) {
     uint32_t *where = &buffer.buffer[x + y * buffer.width];
 
-    for (int i = 0; i < MIN(buffer.height - y, fontHeight); ++i) {
-        for (int j = 0; j < MIN(buffer.width - x, fontWidth); ++j) {
+    // Determine the smaller of the font and framebuffer dimensions
+    int x_limit = MIN(fontWidth, buffer.width - x);
+    int y_limit = MIN(fontHeight, buffer.height - y);
+
+    for (int i = 0; i < y_limit; ++i) {
+        for (int j = 0; j < x_limit; ++j) {
             *where++ = bitmap[i] & maskTable[j] ? col : *where;
         }
-        where += buffer.width - MIN(buffer.width - x, fontWidth);
+        where += buffer.width - x_limit;
     }
 }
 
@@ -85,27 +92,32 @@ void gfxDrawString(int x, int y, char *str, gfxBuffer buffer, uint32_t col) {
 void gfxDrawBuffer(int x, int y, gfxBuffer src, gfxBuffer dest) {
     uint32_t *where = &dest.buffer[x + y * dest.width];
 
-    for (int i = 0; i < MIN(dest.height - y, src.height); i++) {
-        for (int j = 0; j < MIN(dest.width - x, src.width); j++) {
+    int x_limit = MIN(dest.width - x, src.width);
+    int y_limit = MIN(dest.height - y, src.height);
+
+    for (int i = 0; i < y_limit; i++) {
+        for (int j = 0; j < x_limit; j++) {
             *where++ = src.buffer[i * src.width + j];
         }
-        where += dest.width - MIN(dest.width - x, src.width);
+        where += dest.width - x_limit;
     }
 }
 
 void gfxSwapBuffers(void) {
-    fSynced = false;
-    for (int i = 0; i < framebuffer.width * framebuffer.height; i++) {
-        if (framebuffer.buffer[i] != video_memory[i]) {
-            video_memory[i] = framebuffer.buffer[i];
-        }
-    }
-    fSynced = true;
+    // Determine the size of the framebuffer in bytes
+    size_t fb_size = framebuffer.width * framebuffer.height * sizeof(uint32_t);
+
+    // Use memcpy to copy the framebuffer to the video memory
+    memcpy(video_memory, framebuffer.buffer, fb_size);
 }
 
 void gfxClearBuffer(gfxBuffer buffer, uint32_t col) {
+    // Create a pointer to the beginning of the buffer array
+    uint32_t *p = buffer.buffer;
+
+    // Set all the values in the buffer to the specified color
     for (int i = 0; i < buffer.width * buffer.height; i++) {
-        if (buffer.buffer[i] != col) buffer.buffer[i] = col;
+        *p++ = col;
     }
 }
 
