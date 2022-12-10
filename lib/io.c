@@ -18,9 +18,31 @@ uint16_t inw(uint16_t port) {
 }
 
 void *memset(void *buf, int val, size_t sz) {
-    for (size_t i = 0; i < sz; ++i) {
-        ((uint8_t *)buf)[i] = (uint8_t)val;
+    // Cast the buffer pointer to uint32_t *
+    uint32_t *d = (uint32_t *)buf;
+    // Set the value to be copied in a 32-bit integer
+    uint32_t v = (val & 0xff) | ((val & 0xff) << 8) | ((val & 0xff) << 16) | ((val & 0xff) << 24);
+
+    // Set data in blocks of 16 bytes (4 words)
+    while (sz >= 16) {
+        // Unroll the inner loop
+        *d++ = v;
+        *d++ = v;
+        *d++ = v;
+        *d++ = v;
+        sz -= 16;
     }
+
+    // Set any remaining words individually
+    while (sz >= 4) {
+        *d++ = v;
+        sz -= 4;
+    }
+
+    // Set any remaining bytes individually
+    char *d2 = (char *)d;
+    while (sz--) *d2++ = (char)val;
+
     return buf;
 }
 

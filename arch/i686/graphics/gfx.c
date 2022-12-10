@@ -65,27 +65,23 @@ void gfxDrawLegacyBitmap(int x, int y, uint8_t *bitmap, gfxBuffer buffer, uint32
 
 int cursor_x, cursor_y;
 
-void gfxDrawCharacter(int x, int y, char ch, gfxBuffer buffer, uint32_t col) {
-    // If the cursor is at the bottom of the screen, scroll up
-    // by the height of a character
-    if (cursor_y + fontHeight >= fbHeight) cursor_y = y;
-
-    if (ch == '\n' || cursor_x + fontWidth >= buffer.width) {
-        cursor_x = x;
-        cursor_y += fontHeight;
-        return;
-    }
-
-    gfxDrawLegacyBitmap(cursor_x, cursor_y, systemFont[ch], buffer, col);
-    cursor_x += fontWidth;
-}
-
 void gfxDrawString(int x, int y, char *str, gfxBuffer buffer, uint32_t col) {
     cursor_x = x;
     cursor_y = y;
 
     while (*str) {
-        gfxDrawCharacter(x, y, *str++, buffer, col);
+        if (*str == '\n' || cursor_x + fontWidth >= buffer.width) {
+            cursor_x = x;
+            cursor_y += fontHeight;
+
+            // If the cursor is at the bottom of the screen, scroll up
+            // by the height of a character
+            if (cursor_y + fontHeight >= fbHeight) cursor_y = y;
+        } else {
+            gfxDrawLegacyBitmap(cursor_x, cursor_y, systemFont[*str], buffer, col);
+            cursor_x += fontWidth;
+        }
+        str++;
     }
 }
 
